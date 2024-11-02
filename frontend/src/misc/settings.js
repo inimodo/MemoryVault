@@ -1,4 +1,4 @@
  export default {
-   deploymentPath: "https://www.ini02.xyz/derh/",
+   backendPath: "https://ini02.xyz/derh/php/",
    userSelectColumns:2
  };

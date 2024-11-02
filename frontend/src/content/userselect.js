@@ -1,5 +1,4 @@
 import React from 'react';
-import './../css/userselect.css';
 import UserList from './../userimages/userlist.js';
 import Avatar from '@mui/material/Avatar';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
@@ -23,7 +22,7 @@ function UserSelect(props){
     }
     columnData[id % columns].push((
       <ListItem disableGutters key={id}>
-        <ListItemButton onClick={() => {
+        <ListItemButton key={id} onClick={() => {
           setOpen(false);
           props.selectUser(id)}}>
           <ListItemAvatar>
@@ -40,8 +39,8 @@ function UserSelect(props){
     <Dialog open={open} maxWidth="xl">
       <DialogTitle>Wer bist du?</DialogTitle>
       <Grid container spacing={0}>
-        {columnData.map((column)=>(
-          <Grid size={12/columns} key={column.id}>
+        {columnData.map((column,index)=>(
+          <Grid size={12/columns} key={index}>
             <List sx={{ pt: 0 }} dense={true}>
               {column.map((userField) => (userField))}
             </List>
