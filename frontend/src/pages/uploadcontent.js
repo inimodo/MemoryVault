@@ -45,8 +45,7 @@ class UploadContent extends React.Component{
           </Box>
         </Container>
       </Dialog>
-
-      );
+    );
   }
 }
 

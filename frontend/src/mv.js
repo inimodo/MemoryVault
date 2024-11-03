@@ -1,6 +1,6 @@
 import React from 'react';
 import ContentLister from './pages/contentlister.js';
-import SettingsController from './pages/settingsctrl.js';
+import FolderManager from './pages/foldermanager.js';
 import UploadContent from './pages/uploadcontent.js';
 import UserSelect from './content/userselect.js';
 import UserList from './userimages/userlist.js';
@@ -14,7 +14,8 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear, faPhotoFilm, faCloudArrowUp} from '@fortawesome/free-solid-svg-icons'
+import { faFolderTree, faPhotoFilm, faCloudArrowUp} from '@fortawesome/free-solid-svg-icons'
+import Fab from '@mui/material/Fab';
 
 class MemoryVault extends React.Component{
 
@@ -38,7 +39,7 @@ class MemoryVault extends React.Component{
 
   componentDidMount()
   {
-    Backend.checktoken(this.state.token).then( (data) => {
+    Backend.checkToken(this.state.token).then( (data) => {
       if(data.status == true)
       {
         this.setState({ allowAccess:true });
@@ -72,29 +73,32 @@ class MemoryVault extends React.Component{
       </Dialog>
     );
   }
-  
+
   return (
       <>
-        <UserSelect selectUser={this.selectUser}/>
-        <SettingsController show={this.state.showSettingsMenu} close={this.closeMenues}/>
-        <UploadContent show={this.state.showUploadMenu} close={this.closeMenues}/>
-        <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
-          <Toolbar>
-            <IconButton color="inherit" aria-label="open drawer">
-              <Avatar src={UserList.Icons[this.state.user]}/>
-            </IconButton>
-            <Box sx={{ flexGrow: 1 }} />
-            <IconButton color="inherit"
-              onClick={()=>{this.setState({showSettingsMenu:true})}}>
-              <FontAwesomeIcon icon={faGear} />
-            </IconButton>
-            <IconButton color="inherit"
-              onClick={()=>{this.setState({showUploadMenu:true})}}>
-              <FontAwesomeIcon icon={faCloudArrowUp} />
-            </IconButton>
-          </Toolbar>
-          <ContentLister/>
-        </AppBar>
+        <UserSelect selectUser={this.selectUser} user={this.state.user}/>
+        <FolderManager
+          show={this.state.showSettingsMenu}
+          close={this.closeMenues}
+          token={this.state.token}/>
+        <UploadContent
+          show={this.state.showUploadMenu}
+          close={this.closeMenues}
+          token={this.state.token}
+          />
+
+        <Fab sx={{position:'absolute', bottom: 16, right: 16, width: 64, height: 64 }}
+          onClick={()=>{this.setState({showUploadMenu:true})}}>
+          <FontAwesomeIcon icon={faCloudArrowUp} size="xl"/>
+        </Fab>
+        <Fab sx={{position:'absolute', bottom: 16, right: 96 , width: 64, height: 64 }}
+          onClick={()=>{this.setState({showSettingsMenu:true})}}>
+          <FontAwesomeIcon icon={faFolderTree} size="xl"/>
+        </Fab>
+        <Fab sx={{position:'absolute', bottom: 16, left: 16}}
+          onClick={()=>{this.setState({user:-1})}}>
+          <Avatar sx={{ width: 64, height: 64 }} src={UserList.Icons[this.state.user]}/>
+        </Fab>
       </>
     );
   }

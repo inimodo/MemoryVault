@@ -24,10 +24,22 @@ class WebSocket {
 class Backend extends WebSocket
 {
 
-  static async checktoken(_token)
+  static async checkToken(token)
   {
-    return this.post("checktoken.php",{token:_token});
+    return this.post("checktoken.php",{token:token});
   }
 
+  static async listFolders(token)
+  {
+    return this.post("foldermanager.php",{token:token,opcode:0});
+  }
+  static async addFolder(token,folder)
+  {
+    return this.post("foldermanager.php",{token:token,opcode:1,folder:folder});
+  }
+  static async addSubFolder(token,folder,subfolder)
+  {
+    return this.post("foldermanager.php",{token:token,opcode:1,folder:folder,subfolder:subfolder});
+  }
 }
 export default Backend;

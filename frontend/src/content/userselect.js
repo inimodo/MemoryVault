@@ -12,7 +12,6 @@ import Grid from '@mui/material/Grid2';
 import Settings from './../misc/settings.js';
 
 function UserSelect(props){
-  const [open, setOpen] = React.useState(true);
 
   const columns  = Settings.userSelectColumns;
   var columnData = Array(columns);
@@ -23,7 +22,6 @@ function UserSelect(props){
     columnData[id % columns].push((
       <ListItem disableGutters key={id}>
         <ListItemButton key={id} onClick={() => {
-          setOpen(false);
           props.selectUser(id)}}>
           <ListItemAvatar>
             <Avatar src={user}/>
@@ -36,7 +34,7 @@ function UserSelect(props){
   });
 
   return(
-    <Dialog open={open} maxWidth="xl">
+    <Dialog open={props.user==-1} maxWidth="xl">
       <DialogTitle>Wer bist du?</DialogTitle>
       <Grid container spacing={0}>
         {columnData.map((column,index)=>(
