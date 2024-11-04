@@ -39,7 +39,7 @@ class Backend extends WebSocket
   }
   static async addSubFolder(token,folder,subfolder)
   {
-    return this.post("foldermanager.php",{token:token,opcode:1,folder:folder,subfolder:subfolder});
+    return this.post("foldermanager.php",{token:token,opcode:2,folder:folder,subfolder:subfolder});
   }
 }
 export default Backend;

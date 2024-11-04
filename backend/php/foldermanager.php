@@ -10,8 +10,8 @@ if($token != ACCESS_TOKEN)
 }
 
 $opcode = intval(preg_replace('/[^0-9\s]+/u','',$_POST['opcode']));
-$folder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',$_POST['folder']);
-$subFolder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',$_POST['subfolder']);
+$folder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_POST['folder']));
+$subFolder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_POST['subfolder']));
 
 switch ($opcode)
 {
@@ -28,14 +28,15 @@ switch ($opcode)
         {
           if(is_dir(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex]))
           {
-            $jsonSubFolderList .= '"'.$subFolders[$subFolderIndex].'"';
+
+            $jsonSubFolderList .= '"'.str_replace("_"," ",$subFolders[$subFolderIndex]).'"';
             if($subFolderIndex != count($subFolders)-1)
             {
               $jsonSubFolderList .= ",";
             }
           }
         }
-        $jsonFolderList .= '{"folderName":"'.$folders[$folderIndex].'","subFolderNames":['.$jsonSubFolderList.']}';
+        $jsonFolderList .= '{"folderName":"'.str_replace("_"," ",$folders[$folderIndex]).'","subFolderNames":['.$jsonSubFolderList.']}';
         if($folderIndex != count($folders)-1)
         {
           $jsonFolderList .= ",";
