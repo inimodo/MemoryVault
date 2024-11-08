@@ -18,29 +18,33 @@ switch ($opcode)
   case 0: // List all folders
     $folders = scandir(DATA_PATH);
     $jsonFolderList = "";
+    $foldersAdded = 0;
     for ($folderIndex = 2; $folderIndex < count($folders); $folderIndex++)
     {
       $jsonSubFolderList = "";
       if(is_dir(DATA_PATH.$folders[$folderIndex]))
       {
         $subFolders = scandir(DATA_PATH.$folders[$folderIndex]);
+        $subFoldersAdded = 0;
         for ($subFolderIndex = 2; $subFolderIndex < count($subFolders); $subFolderIndex++)
         {
           if(is_dir(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex]))
           {
 
-            $jsonSubFolderList .= '"'.str_replace("_"," ",$subFolders[$subFolderIndex]).'"';
-            if($subFolderIndex != count($subFolders)-1)
+            if($subFoldersAdded != 0)
             {
               $jsonSubFolderList .= ",";
             }
+            $jsonSubFolderList .= '"'.str_replace("_"," ",$subFolders[$subFolderIndex]).'"';
+            $subFoldersAdded++;
           }
         }
-        $jsonFolderList .= '{"folderName":"'.str_replace("_"," ",$folders[$folderIndex]).'","subFolderNames":['.$jsonSubFolderList.']}';
-        if($folderIndex != count($folders)-1)
+        if($foldersAdded  != 0)
         {
           $jsonFolderList .= ",";
         }
+        $jsonFolderList .= '{"folderName":"'.str_replace("_"," ",$folders[$folderIndex]).'","subFolderNames":['.$jsonSubFolderList.']}';
+        $foldersAdded++; 
       }
     }
     die('{"status":true, "folders": ['.$jsonFolderList.']}');

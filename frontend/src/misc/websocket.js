@@ -1,4 +1,6 @@
 import Settings from "./settings.js"
+import Axios from 'axios';
+
 class WebSocket {
   static headers(body)
   {
@@ -40,6 +42,25 @@ class Backend extends WebSocket
   static async addSubFolder(token,folder,subfolder)
   {
     return this.post("foldermanager.php",{token:token,opcode:2,folder:folder,subfolder:subfolder});
+  }
+  static async uploadFile(token, file, folder,user, progressEvent)
+  {
+    var formData = new FormData();
+    console.log(folder);
+    var folderStruct = folder.split('/');
+    if(!folder.includes('/')) folderStruct[1] = null;
+    formData.append("file", file);
+    formData.append("token", token);
+    formData.append("cdate", file.lastModified);
+    formData.append("folder", folderStruct[0]);
+    formData.append("subFolder", folderStruct[1]);
+    formData.append("user", user);
+    Axios.post(Settings.backendPath + 'uploadhandler.php', formData, {
+     onUploadProgress: progressEvent,
+     headers: { 'Content-Type': 'multipart/form-data' }
+    }).then((res) => {
+      console.log(res);
+      console.log("got it");});
   }
 }
 export default Backend;

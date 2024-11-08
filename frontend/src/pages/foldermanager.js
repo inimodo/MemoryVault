@@ -94,7 +94,7 @@ class FolderManager extends React.Component{
           createMenuFolder:op[1]
         });
       }
-    }else if(itemId ===  "createFolder")
+    }else if(isSelected && itemId ===  "createFolder")
     {
       this.setState({
         showCreateMenu:true,
@@ -139,7 +139,9 @@ class FolderManager extends React.Component{
           <Button onClick={()=>{
             this.setState({showCreateMenu:false, newFolderName:""})
           }}>Abbrechen</Button>
-          <Button onClick={()=>{
+          <Button
+            disabled={!isValidName(this.state.newFolderName)}
+            onClick={()=>{
             if(isValidName(this.state.newFolderName))
             {
                 if(this.state.createMenuFolder === "")

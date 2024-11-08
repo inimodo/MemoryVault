@@ -10,6 +10,9 @@ const globalTheme = createTheme({
   palette: {
     mode: 'dark',
   },
+  typography: {
+    fontSize: 12,
+  },
 });
 
 root.render(
