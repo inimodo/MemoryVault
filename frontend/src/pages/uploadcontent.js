@@ -20,11 +20,19 @@ import {
   faCloudArrowUp,
   faPhotoFilm,
   faFolder,
+  faGear,
   faFolderPlus,
-  faTriangleExclamation
+  faTriangleExclamation,
+  faCircleExclamation,
+  faCircleCheck,
+  faFileExcel
 } from '@fortawesome/free-solid-svg-icons'
 import DialogContentText from '@mui/material/DialogContentText';
 import axios from 'axios';
+import CircularProgress from '@mui/material/CircularProgress';
+import LinearProgress from '@mui/material/LinearProgress';
+import Grid from '@mui/material/Grid2';
+import Avatar from '@mui/material/Avatar';
 
 
 class UploadContent extends React.Component{
@@ -37,11 +45,21 @@ class UploadContent extends React.Component{
       page: 1,
       folderList: [],
       selectedFolder:'',
-      selectedFiles:[]
+      selectedFiles:[],
+      isUploading:false,
+      doneUploading:false,
+      fileUploadProgress:[],
+      fileUploadStatus:[],
+      fileIndex:0,
     };
 
     this.setPage = this.setPage.bind(this);
     this.loadFolderList = this.loadFolderList.bind(this);
+    this.uploadAllFiles = this.uploadAllFiles.bind(this);
+    this.getFileUploadInfo = this.getFileUploadInfo.bind(this);
+    this.uploadFile = this.uploadFile.bind(this);
+    this.cleanUpFileUpload = this.cleanUpFileUpload.bind(this);
+    this.decodeStatus = this.decodeStatus.bind(this);
   }
 
   componentDidMount()
@@ -70,85 +88,199 @@ class UploadContent extends React.Component{
     });
   }
 
+  cleanUpFileUpload()
+  {
+    this.setState({
+      page: 1,
+      folderList: [],
+      selectedFolder:'',
+      selectedFiles:[],
+      isUploading:false,
+      doneUploading:false,
+      fileUploadProgress:[],
+      fileUploadStatus:[],
+      fileIndex:0,
+    });
+  }
+
   setPage(e,value)
   {
     this.setState({ page: value});
   }
 
+  decodeStatus(response)
+  {
+    if(response.data.status)
+    {
+      return (
+        <Typography variant="caption" sx={{ml:'1vh', display: 'block',color:"lightgreen"}}>
+          <FontAwesomeIcon icon={faCircleCheck} size="sm"/> Erfolgreich Hochgeladen.
+        </Typography>);
+    }else
+    {
+      switch (response.data.code) {
+        case 0:
+        return (
+          <Typography variant="caption" sx={{ml:'1vh', display: 'block',color:"indianred"}}>
+            <FontAwesomeIcon icon={faCircleExclamation} size="sm"/> Hochladen fehlgeschlagen.
+          </Typography>);
+          break;
+        case 1:
+        return (
+          <Typography variant="caption" sx={{ml:'1vh', display: 'block',color:"indianred"}}>
+            <FontAwesomeIcon icon={faFileExcel} size="sm"/> Verbotener Dateityp.
+          </Typography>);
+          break;
+        default:
+        return (
+          <Typography variant="caption" sx={{ml:'1vh', display: 'block',color:"indianred"}}>
+            <FontAwesomeIcon icon={faCircleExclamation} size="sm"/> Unbekannter Fehler.
+          </Typography>);
+      }
+    }
+  }
+
+  uploadFile()
+  {
+    console.log("Startet with: "+this.state.fileIndex);
+    if(this.state.fileIndex == this.state.selectedFiles.length)
+    {
+      this.setState({
+        doneUploading:true
+      });
+      return;
+    }
+
+    Backend.uploadFile(
+      this.props.token,
+      this.state.selectedFiles[this.state.fileIndex],
+      this.state.selectedFolder,
+      this.props.user,
+      (progressEvent)=>{
+        const { loaded, total } = progressEvent;
+        var fprog = [...this.state.fileUploadProgress];
+        fprog[this.state.fileIndex] = Math.floor((loaded * 100) / total);;
+        this.setState({ fileUploadProgress: fprog});
+
+    }).then((res) =>{
+      var fstatus = [...this.state.fileUploadStatus];
+      fstatus[this.state.fileIndex] = this.decodeStatus(res);
+      this.setState({
+        fileUploadStatus: fstatus,
+        fileIndex: this.state.fileIndex+1
+      });
+      console.log(res);
+      this.uploadFile();
+    });
+  }
+
+  uploadAllFiles()
+  {
+    this.setState({
+      isUploading:true,
+      fileUploadProgress: Array(this.state.selectedFiles.length).fill(0),
+      fileUploadStatus: Array(this.state.selectedFiles.length).fill(<></>),
+      fileIndex:0
+    });
+    this.uploadFile();
+  }
+
+  getFileUploadInfo()
+  {
+    return Array.from(this.state.selectedFiles).map( (obj , index) =>(
+      <Grid container sx={{m:"2vh",mt:"0"}} key={index}>
+        <Grid size={2}>
+          <Avatar
+            src={URL.createObjectURL(this.state.selectedFiles[index])}
+            />
+        </Grid>
+        <Grid size={10}>
+          <Typography variant="caption" sx={{ml:'1vh', lineHeight: 1.5, display: 'block' }}>
+            {obj.name}
+          </Typography>
+          {this.state.fileUploadStatus[index]}
+
+          <LinearProgress sx={{ml:'1vh'}} variant="determinate" value={this.state.fileUploadProgress[index]} />
+        </Grid>
+      </Grid>
+    ));
+  }
+
   render()
   {
     return (
-      <Dialog open={this.props.show} onClose={this.props.close} maxWidth="xl">
-        <DialogTitle>
-          <FontAwesomeIcon icon={faCloudArrowUp} size="sm"/> Bilder und Fotos Hochladen
-        </DialogTitle>
-        <Container fixed>
-            <Tabs  value={this.state.page+""} onChange={this.setPage} >
-              <Tab label="Lokaler Upload"  value="1"/>
-              <Tab label="FTP Import"  value="2"/>
-            </Tabs>
-          <Box hidden={this.state.page!=1}>
-            <Button
-              fullWidth
-              component="label"
-              role={undefined}
-              variant="contained"
-              tabIndex={-1}
-              startIcon={<FontAwesomeIcon icon={faPhotoFilm} size="sm"/> }
-              sx={{mb:"0vh",mt:"2vh"}}
-            >
-              Dateien Auswählen
-              <input style={{display:"none"}}
-                type="file"
-                onChange={(event)=>{ this.setState({selectedFiles:event.target.files});}}
-                multiple
-              />
-            </Button>
-            <Typography variant="subtitle2" component="h2">
-              {this.state.selectedFiles.length!==0
-                && this.state.selectedFiles.length+" Dateien Ausgewählt."}
-            </Typography>
-          </Box>
-          <Box hidden={this.state.page!=2}>
-            <DialogTitle>2</DialogTitle>
-          </Box>
-          <FormControl fullWidth sx={{mb:"2vh",mt:"2vh"}}>
-            <InputLabel id="selFolder">Ordner</InputLabel>
-            <Select
-              value={this.state.selectedFolder}
-              label="Ordner"
-              labelId="selFolder"
-              onChange={(event)=>{ this.setState({selectedFolder:event.target.value});}}
-            >
-              {this.state.folderList.map( (folder, index) =>
-                (<MenuItem key={index} value={folder}>{folder}</MenuItem>))
-              }
-            </Select>
-          </FormControl>
+      <React.Fragment>
+        <Dialog maxWidth="sm" open={this.state.isUploading} onClose={this.props.close} >
+          <DialogTitle>
+            <FontAwesomeIcon icon={faGear} size="sm" spin/> Dateien werden Hochgeladen
+          </DialogTitle>
+          {this.getFileUploadInfo()}
           <DialogActions>
             <Button
-            disabled={this.state.selectedFiles.length === 0
-              || this.state.selectedFolder === ''}
-            onClick={()=>{
-              console.log(this.state.selectedFiles[0]);
-              Backend.uploadFile(
-                this.props.token,
-                this.state.selectedFiles[0],
-                this.state.selectedFolder,
-                this.props.user,
-                (progressEvent)=>{
-                  const { loaded, total } = progressEvent;
-                  let precentage = Math.floor((loaded * 100) / total);
-                  console.log(precentage);
-              });
-
-            }}
-            >Hochladen</Button>
-
+            disabled={!this.state.doneUploading}
+            onClick={this.cleanUpFileUpload}
+            >Fertig</Button>
 
           </DialogActions>
-        </Container>
-      </Dialog>
+        </Dialog>
+        <Dialog open={this.props.show} onClose={this.props.close} maxWidth="xl">
+          <DialogTitle>
+            <FontAwesomeIcon icon={faCloudArrowUp} size="sm"/> Bilder und Fotos Hochladen
+          </DialogTitle>
+          <Container fixed>
+              <Tabs  value={this.state.page+""} onChange={this.setPage} >
+                <Tab label="Lokaler Upload"  value="1"/>
+                <Tab label="FTP Import"  value="2"/>
+              </Tabs>
+            <Box hidden={this.state.page!=1}>
+              <Button
+                fullWidth
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<FontAwesomeIcon icon={faPhotoFilm} size="sm"/> }
+                sx={{mb:"0vh",mt:"2vh"}}
+              >
+                Dateien Auswählen
+                <input style={{display:"none"}}
+                  type="file"
+                  onChange={(event)=>{ this.setState({selectedFiles:event.target.files});}}
+                  multiple
+                />
+              </Button>
+              <Typography variant="subtitle2" component="h2">
+                {this.state.selectedFiles.length!==0
+                  && this.state.selectedFiles.length+" Dateien Ausgewählt."}
+              </Typography>
+            </Box>
+            <Box hidden={this.state.page!=2}>
+              <DialogTitle>2</DialogTitle>
+            </Box>
+            <FormControl fullWidth sx={{mb:"2vh",mt:"2vh"}}>
+              <InputLabel id="selFolder">Ordner</InputLabel>
+              <Select
+                value={this.state.selectedFolder}
+                label="Ordner"
+                labelId="selFolder"
+                onChange={(event)=>{ this.setState({selectedFolder:event.target.value});}}
+              >
+                {this.state.folderList.map( (folder, index) =>
+                  (<MenuItem key={index} value={folder}>{folder}</MenuItem>))
+                }
+              </Select>
+            </FormControl>
+            <DialogActions>
+              <Button
+              disabled={this.state.selectedFiles.length === 0
+                || this.state.selectedFolder === ''}
+              onClick={this.uploadAllFiles}
+              >Hochladen</Button>
+
+            </DialogActions>
+          </Container>
+        </Dialog>
+      </React.Fragment>
     );
   }
 }

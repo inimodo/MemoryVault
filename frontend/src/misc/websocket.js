@@ -46,21 +46,18 @@ class Backend extends WebSocket
   static async uploadFile(token, file, folder,user, progressEvent)
   {
     var formData = new FormData();
-    console.log(folder);
     var folderStruct = folder.split('/');
-    if(!folder.includes('/')) folderStruct[1] = null;
+    if(!folder.includes('/')) folderStruct[1] = "NONE";
     formData.append("file", file);
     formData.append("token", token);
     formData.append("cdate", file.lastModified);
     formData.append("folder", folderStruct[0]);
     formData.append("subFolder", folderStruct[1]);
     formData.append("user", user);
-    Axios.post(Settings.backendPath + 'uploadhandler.php', formData, {
+    return Axios.post(Settings.backendPath + 'uploadhandler.php', formData, {
      onUploadProgress: progressEvent,
      headers: { 'Content-Type': 'multipart/form-data' }
-    }).then((res) => {
-      console.log(res);
-      console.log("got it");});
+    });
   }
 }
 export default Backend;

@@ -23,11 +23,11 @@ function fileIsValid($file)
 
 if(!fileIsValid($_FILES['file']['name']))
 {
-  die('{"status":false , "msg":"Datei besitzt einen ungültigen Dateitypen"}');
+  die('{"status":false ,"code":1, "msg":"Datei besitzt einen ungültigen Dateitypen"}');
 }
 
 $filePath = DATA_PATH.$folder."/".$subFolder."/".$_FILES["file"]["name"];
-if($subFolder == null)
+if($subFolder == "NONE")
 {
   $filePath = DATA_PATH.$folder."/".$_FILES["file"]["name"];
 }
@@ -39,6 +39,6 @@ if (move_uploaded_file($_FILES["file"]["tmp_name"],$filePath))
   file_put_contents($jsonDataPath, $jsonData);
   die('{"status":true , "msg":"Datei wurde erfolgreich Hochgeladen."}');
 }
-die('{"status":false , "msg":"Datei konnte nicht Hochgeladen werden."}');
+die('{"status":false ,"code":0, "msg":"Datei konnte nicht Hochgeladen werden."}');
 
  ?>
