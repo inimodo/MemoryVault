@@ -51,15 +51,19 @@ class UploadContent extends React.Component{
       fileUploadProgress:[],
       fileUploadStatus:[],
       fileIndex:0,
+      filesToImport: 0,
+      importStatus: ""
     };
 
     this.setPage = this.setPage.bind(this);
     this.loadFolderList = this.loadFolderList.bind(this);
     this.uploadAllFiles = this.uploadAllFiles.bind(this);
+    this.importAllFiles = this.importAllFiles.bind(this);
     this.getFileUploadInfo = this.getFileUploadInfo.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
     this.cleanUpFileUpload = this.cleanUpFileUpload.bind(this);
     this.decodeStatus = this.decodeStatus.bind(this);
+    this.loadImportFiles = this.loadImportFiles.bind(this);
   }
 
   componentDidMount()
@@ -92,7 +96,6 @@ class UploadContent extends React.Component{
   {
     this.setState({
       page: 1,
-      folderList: [],
       selectedFolder:'',
       selectedFiles:[],
       isUploading:false,
@@ -142,7 +145,6 @@ class UploadContent extends React.Component{
 
   uploadFile()
   {
-    console.log("Startet with: "+this.state.fileIndex);
     if(this.state.fileIndex == this.state.selectedFiles.length)
     {
       this.setState({
@@ -168,9 +170,22 @@ class UploadContent extends React.Component{
       this.setState({
         fileUploadStatus: fstatus,
         fileIndex: this.state.fileIndex+1
-      });
-      console.log(res);
-      this.uploadFile();
+      }, () => this.uploadFile());
+    });
+  }
+
+  importAllFiles()
+  {
+
+  }
+
+  loadImportFiles()
+  {
+    Backend.listImportFiles(this.props.token).then( (data) => {
+      if(data.status == true)
+      {
+        this.setState({filesToImport: data.found});
+      }
     });
   }
 
@@ -208,9 +223,24 @@ class UploadContent extends React.Component{
 
   render()
   {
+    const FolderSelect = (()=>(
+      <FormControl fullWidth sx={{mb:"2vh",mt:"2vh"}}>
+        <InputLabel id="selFolder">Ordner</InputLabel>
+        <Select
+          value={this.state.selectedFolder}
+          label="Ordner"
+          labelId="selFolder"
+          onChange={(event)=>{ this.setState({selectedFolder:event.target.value});}}
+        >
+          {this.state.folderList.map( (folder, index) =>
+            (<MenuItem key={index} value={folder}>{folder}</MenuItem>))
+          }
+        </Select>
+      </FormControl>
+    ));
     return (
       <React.Fragment>
-        <Dialog maxWidth="sm" open={this.state.isUploading} onClose={this.props.close} >
+        <Dialog disableEnforceFocus  maxWidth="sm" open={this.state.isUploading} onClose={this.props.close} >
           <DialogTitle>
             <FontAwesomeIcon icon={faGear} size="sm" spin/> Dateien werden Hochgeladen
           </DialogTitle>
@@ -220,10 +250,9 @@ class UploadContent extends React.Component{
             disabled={!this.state.doneUploading}
             onClick={this.cleanUpFileUpload}
             >Fertig</Button>
-
           </DialogActions>
         </Dialog>
-        <Dialog open={this.props.show} onClose={this.props.close} maxWidth="xl">
+        <Dialog disableEnforceFocus open={this.props.show} onClose={this.props.close} maxWidth="sm">
           <DialogTitle>
             <FontAwesomeIcon icon={faCloudArrowUp} size="sm"/> Bilder und Fotos Hochladen
           </DialogTitle>
@@ -253,31 +282,55 @@ class UploadContent extends React.Component{
                 {this.state.selectedFiles.length!==0
                   && this.state.selectedFiles.length+" Dateien Ausgewählt."}
               </Typography>
+
+              {FolderSelect()}
+
+              <DialogActions>
+                <Button
+                disabled={this.state.selectedFiles.length === 0
+                  || this.state.selectedFolder === ''}
+                onClick={this.uploadAllFiles}
+                >Hochladen</Button>
+              </DialogActions>
             </Box>
             <Box hidden={this.state.page!=2}>
-              <DialogTitle>2</DialogTitle>
-            </Box>
-            <FormControl fullWidth sx={{mb:"2vh",mt:"2vh"}}>
-              <InputLabel id="selFolder">Ordner</InputLabel>
-              <Select
-                value={this.state.selectedFolder}
-                label="Ordner"
-                labelId="selFolder"
-                onChange={(event)=>{ this.setState({selectedFolder:event.target.value});}}
-              >
-                {this.state.folderList.map( (folder, index) =>
-                  (<MenuItem key={index} value={folder}>{folder}</MenuItem>))
-                }
-              </Select>
-            </FormControl>
-            <DialogActions>
+              <Typography variant="caption" sx={{color:"indianred"}}>
+                <FontAwesomeIcon icon={faTriangleExclamation} size="sm"/> Achtung!
+                Nur ausgewählten Personen stehen die FTP Zugangsdaten zur verfügung.
+                Wenn du nicht in den FTP Import eingewiesen wurdest, bitte ich dich hier nichts anzufassen, danke.
+                Falls du große Mengen an Fotos/Videos Hochladen möchtest, melde dich bitte bei mir.
+                Grüße Markus.
+              </Typography>
               <Button
-              disabled={this.state.selectedFiles.length === 0
-                || this.state.selectedFolder === ''}
-              onClick={this.uploadAllFiles}
-              >Hochladen</Button>
+                fullWidth
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<FontAwesomeIcon icon={faPhotoFilm} size="sm"/> }
+                sx={{mb:"0vh",mt:"2vh"}}
+                onClick={this.loadImportFiles}
+              >Nach Dateien am Server Suchen</Button>
 
-            </DialogActions>
+              <Typography variant="subtitle2" component="h2">
+                {this.state.filesToImport!==0
+                  && this.state.filesToImport+" Dateien wurden gefunden."}
+              </Typography>
+              <Typography variant="subtitle2" component="h2">
+                {this.state.importStatus!==""
+                  && this.state.importStatus}
+              </Typography>
+
+              {FolderSelect()}
+
+              <DialogActions>
+                <Button
+                disabled={this.state.selectedFolder === ''
+                || this.state.filesToImport === 0}
+                onClick={this.importAllFiles}
+                >Importieren</Button>
+              </DialogActions>
+            </Box>
           </Container>
         </Dialog>
       </React.Fragment>
@@ -286,4 +339,3 @@ class UploadContent extends React.Component{
 }
 
 export default UploadContent;
-/*     <img src={URL.createObjectURL(this.state.selectedFiles[0])} />   */

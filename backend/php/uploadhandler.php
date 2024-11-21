@@ -31,7 +31,7 @@ if($subFolder == "NONE")
 {
   $filePath = DATA_PATH.$folder."/".$_FILES["file"]["name"];
 }
-$jsonData = '{"user":'.$user.',"cdate":'.$cdate.'}';
+$jsonData = '{"user":'.$user.',"cdate":'.$cdate.',"hashtags":[]}';
 $jsonDataPath = $filePath.".json";
 
 if (move_uploaded_file($_FILES["file"]["tmp_name"],$filePath))

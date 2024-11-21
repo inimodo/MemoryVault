@@ -43,6 +43,10 @@ class Backend extends WebSocket
   {
     return this.post("foldermanager.php",{token:token,opcode:2,folder:folder,subfolder:subfolder});
   }
+  static async listImportFiles(token)
+  {
+    return this.post("importhandler.php",{token:token,opcode:0});
+  }
   static async uploadFile(token, file, folder,user, progressEvent)
   {
     var formData = new FormData();
