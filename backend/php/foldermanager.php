@@ -35,7 +35,8 @@ switch ($opcode)
             {
               $jsonSubFolderList .= ",";
             }
-            $jsonSubFolderList .= '"'.str_replace("_"," ",$subFolders[$subFolderIndex]).'"';
+            $fileCount = (count(scandir(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex]))-2)/2;
+            $jsonSubFolderList .= '{"subFolderName":"'.str_replace("_"," ",$subFolders[$subFolderIndex]).'","fileCount":'.$fileCount.'}';
             $subFoldersAdded++;
           }
         }
@@ -43,8 +44,9 @@ switch ($opcode)
         {
           $jsonFolderList .= ",";
         }
-        $jsonFolderList .= '{"folderName":"'.str_replace("_"," ",$folders[$folderIndex]).'","subFolderNames":['.$jsonSubFolderList.']}';
-        $foldersAdded++; 
+        $fileCount = (count($subFolders)-2-$subFoldersAdded)/2;
+        $jsonFolderList .= '{"folderName":"'.str_replace("_"," ",$folders[$folderIndex]).'","fileCount":'.$fileCount.',"subFolders":['.$jsonSubFolderList.']}';
+        $foldersAdded++;
       }
     }
     die('{"status":true, "folders": ['.$jsonFolderList.']}');

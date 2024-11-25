@@ -52,7 +52,8 @@ class UploadContent extends React.Component{
       fileUploadStatus:[],
       fileIndex:0,
       filesToImport: 0,
-      importStatus: ""
+      movedFiles: 0,
+      failedFiles: 0
     };
 
     this.setPage = this.setPage.bind(this);
@@ -80,10 +81,10 @@ class UploadContent extends React.Component{
         for (var index = 0; index < data.folders.length; index++)
         {
           folderList.push(data.folders[index].folderName);
-          for (var subIndex = 0; subIndex < data.folders[index].subFolderNames.length; subIndex++)
+          for (var subIndex = 0; subIndex < data.folders[index].subFolders.length; subIndex++)
           {
             folderList.push(
-              data.folders[index].folderName+"/"+data.folders[index].subFolderNames[subIndex]
+              data.folders[index].folderName+"/"+data.folders[index].subFolders[subIndex].subFolderName
             );
           }
         }
@@ -176,7 +177,19 @@ class UploadContent extends React.Component{
 
   importAllFiles()
   {
-
+    Backend.importFiles(
+      this.props.token,
+      this.state.selectedFolder,
+      this.props.user
+    ).then((data) =>{
+        if(data.status == true)
+        {
+          this.setState({
+            failedFiles: data.failed,
+            movedFiles: data.moved
+          });
+        }
+    });
   }
 
   loadImportFiles()
@@ -240,7 +253,7 @@ class UploadContent extends React.Component{
     ));
     return (
       <React.Fragment>
-        <Dialog disableEnforceFocus  maxWidth="sm" open={this.state.isUploading} onClose={this.props.close} >
+        <Dialog disableEnforceFocus  maxWidth="sm" open={this.state.isUploading} >
           <DialogTitle>
             <FontAwesomeIcon icon={faGear} size="sm" spin/> Dateien werden Hochgeladen
           </DialogTitle>
@@ -313,12 +326,13 @@ class UploadContent extends React.Component{
               >Nach Dateien am Server Suchen</Button>
 
               <Typography variant="subtitle2" component="h2">
-                {this.state.filesToImport!==0
+                {this.state.filesToImport !== 0
                   && this.state.filesToImport+" Dateien wurden gefunden."}
               </Typography>
               <Typography variant="subtitle2" component="h2">
-                {this.state.importStatus!==""
-                  && this.state.importStatus}
+                {(this.state.movedFiles !== 0 || this.state.failedFiles !== 0)
+                  && this.state.movedFiles+" Dateien wurden Importiert. "
+                  +this.state.failedFiles+" Dateien konnten nicht importiert werden."}
               </Typography>
 
               {FolderSelect()}

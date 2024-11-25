@@ -14,13 +14,6 @@ $user = intval(preg_replace('/[^0-9\s]+/u','',$_POST['user']));
 $folder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_POST['folder']));
 $subFolder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_POST['subFolder']));
 
-function fileIsValid($file)
-{
-  include_once  "./settings.php";
-  $type = strtolower(pathinfo($file,PATHINFO_EXTENSION));
-  return in_array($type,VALID_FTYPE);
-}
-
 if(!fileIsValid($_FILES['file']['name']))
 {
   die('{"status":false ,"code":1, "msg":"Datei besitzt einen ungültigen Dateitypen"}');

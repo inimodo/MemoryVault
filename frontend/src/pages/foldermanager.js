@@ -45,6 +45,7 @@ class FolderManager extends React.Component{
     this.handleSelection = this.handleSelection.bind(this);
     this.createMenuContent = this.createMenuContent.bind(this);
   }
+
   componentDidMount()
   {
     this.loadFolderList();
@@ -173,9 +174,9 @@ class FolderManager extends React.Component{
               this.state.folders.map( (folder) => (
                 <TreeItem key={folder.folderName} itemId={folder.folderName}  label={folder.folderName}>
                   {
-                    folder.subFolderNames.map( (subFolder,index) =>
+                    folder.subFolders.map( (subFolder,index) =>
                     (
-                      <TreeItem key={subFolder} itemId={subFolder}  label={subFolder}/>
+                      <TreeItem key={subFolder} itemId={subFolder.subFolderName}  label={subFolder.subFolderName}/>
                     ))
                   }
                   <TreeItem sx={{color:'text.secondary'}} itemId={"createSubFolder#"+folder.folderName}

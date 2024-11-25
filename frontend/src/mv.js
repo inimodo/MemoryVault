@@ -75,7 +75,7 @@ class MemoryVault extends React.Component{
   }
 
   return (
-      <>
+      <React.Fragment>
         <UserSelect selectUser={this.selectUser} user={this.state.user}/>
         <FolderManager
           show={this.state.showSettingsMenu}
@@ -87,7 +87,10 @@ class MemoryVault extends React.Component{
           token={this.state.token}
           user={this.state.user}
           />
-
+        <ContentLister
+          token={this.state.token}
+          user={this.state.user}
+        />
         <Fab sx={{position:'absolute', bottom: 15, right: 15, width: 50, height: 50 }}
           onClick={()=>{this.setState({showUploadMenu:true})}}>
           <FontAwesomeIcon icon={faCloudArrowUp} size="xl"/>
@@ -100,7 +103,7 @@ class MemoryVault extends React.Component{
           onClick={()=>{this.setState({user:-1})}}>
           <Avatar sx={{ width: 50, height: 50 }} src={UserList.Icons[this.state.user]}/>
         </Fab>
-      </>
+      </React.Fragment>
     );
   }
 }

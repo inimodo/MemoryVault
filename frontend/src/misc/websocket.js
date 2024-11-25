@@ -28,24 +28,64 @@ class Backend extends WebSocket
 
   static async checkToken(token)
   {
-    return this.post("checktoken.php",{token:token});
+    return this.post("checktoken.php",{
+      token:token
+    });
   }
 
   static async listFolders(token)
   {
-    return this.post("foldermanager.php",{token:token,opcode:0});
+    return this.post("foldermanager.php",{
+      token:token,
+      opcode:0
+    });
   }
   static async addFolder(token,folder)
   {
-    return this.post("foldermanager.php",{token:token,opcode:1,folder:folder});
+    return this.post("foldermanager.php",{
+      token:token,
+      opcode:1,
+      folder:folder
+    });
   }
   static async addSubFolder(token,folder,subfolder)
   {
-    return this.post("foldermanager.php",{token:token,opcode:2,folder:folder,subfolder:subfolder});
+    return this.post("foldermanager.php",{
+      token:token,
+      opcode:2,
+      folder:folder,
+      subfolder:subfolder
+    });
   }
   static async listImportFiles(token)
   {
-    return this.post("importhandler.php",{token:token,opcode:0});
+    return this.post("importhandler.php",
+    {
+      token:token,
+      opcode:0
+    });
+  }
+  static async importFiles(token, folder,user, progressEvent)
+  {
+    var folderStruct = folder.split('/');
+    if(!folder.includes('/')) folderStruct[1] = "NONE";
+    return this.post("importhandler.php",
+    {
+      token:token,
+      opcode:1,
+      folder:folderStruct[0],
+      subfolder:folderStruct[1],
+      user:user
+    });
+  }
+  static async listFolderContent(token,folder,subFolder)
+  {
+    return this.post("listcontent.php",
+    {
+      token:token,
+      folder:folder,
+      subfolder:subFolder
+    });
   }
   static async uploadFile(token, file, folder,user, progressEvent)
   {
