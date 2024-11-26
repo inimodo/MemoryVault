@@ -103,5 +103,19 @@ class Backend extends WebSocket
      headers: { 'Content-Type': 'multipart/form-data' }
     });
   }
+  static getFile(token,file,folder,subFolder)
+  {
+   var getRandomInt = ((min, max) => {
+      const minCeiled = Math.ceil(min);
+      const maxFloored = Math.floor(max);
+      return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+    });
+    return Settings.backendPath + 'imgloader.php?token='+token
+                                              +'&file='+file
+                                              +'&quality='+Settings.prevImgQual
+                                              +'&folder='+folder
+                                              +'&subfolder='+subFolder
+                                              +'&'+getRandomInt(10000,99999);
+  }
 }
 export default Backend;

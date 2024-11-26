@@ -1,20 +1,19 @@
 <?php
 include_once  "./settings.php";
 
-$_POST = json_decode(file_get_contents('php://input'), true);
-$token = preg_replace('/[^a-zA-Z0-9\s]+/u','',$_POST['token']);
+$token = preg_replace('/[^a-zA-Z0-9\s]+/u','',$_GET['token']);
 
 if($token != ACCESS_TOKEN)
 {
-  //die('{"status":false}');
+  die('{"status":false}');
 }
 
 $quality = intval(preg_replace('/[^0-9\s]+/u','',$_GET['quality']));
 $folder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_GET['folder']));
 $subFolder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_GET['subfolder']));
-$file = preg_replace('/[^a-zA-Z0-9\-._\s]+/u','',$_GET['file']);
+$file = preg_replace('/[^a-zA-Z0-9\-\ ()._\s]+/u','',$_GET['file']);
 
-if($quality <= 0 || $quality > 100 || !fileIsValid($file))
+if($quality <= 0 || $quality > 100 || !fileIsValid($file,VALID_FTYPE_IMG,VALID_FTYPE_VID))
 {
   die('{"status":false}');
 }
@@ -26,10 +25,29 @@ if($subFolder == "NONE")
 }
 $filePath .= $file;
 
-header('Content-Type: image/jpeg');
-header('Content-Length: ' . filesize($filePath));
-header('Content-Disposition: inline; filename="'.$filePath.'"');
-$image = imagecreatefromjpeg($filePath);
-imagejpeg($image, NULL, $quality) ;
-//echo file_get_contents($location);
+if(fileIsImg($file,VALID_FTYPE_IMG))
+{
+  header('Content-Type: image/jpeg');
+  header('Content-Length: ' . filesize($filePath));
+  header('Content-Disposition: inline; filename="'.$filePath.'"');
+  $image = NULL;
+  switch (getFileEnd($file)) {
+    case 'png':
+    $image = imagecreatefrompng($filePath);
+      break;
+    case 'jpeg':
+    case 'jpg':
+    $image = imagecreatefromjpeg($filePath);
+      break;
+
+  }
+
+  imagejpeg($image, NULL, $quality) ;
+}else
+{
+  header('Content-Type: video/mov');
+  header('Content-Length: ' . filesize($filePath));
+  header('Content-Disposition: inline; filename="'.$filePath.'"');
+  echo file_get_contents($filePath);
+}
  ?>

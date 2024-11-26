@@ -91,15 +91,15 @@ class MemoryVault extends React.Component{
           token={this.state.token}
           user={this.state.user}
         />
-        <Fab sx={{position:'absolute', bottom: 15, right: 15, width: 50, height: 50 }}
+        <Fab sx={{position:'fixed', bottom: 15, right: 15, width: 50, height: 50 }}
           onClick={()=>{this.setState({showUploadMenu:true})}}>
           <FontAwesomeIcon icon={faCloudArrowUp} size="xl"/>
         </Fab>
-        <Fab sx={{position:'absolute', bottom: 15, right: 80 , width: 50, height: 50 }}
+        <Fab sx={{position:'fixed', bottom: 15, right: 80 , width: 50, height: 50 }}
           onClick={()=>{this.setState({showSettingsMenu:true})}}>
           <FontAwesomeIcon icon={faFolderTree} size="xl"/>
         </Fab>
-        <Fab sx={{position:'absolute', bottom: 15, left: 15 ,width: 50, height: 50 }}
+        <Fab sx={{position:'fixed', bottom: 15, left: 15 ,width: 50, height: 50 }}
           onClick={()=>{this.setState({user:-1})}}>
           <Avatar sx={{ width: 50, height: 50 }} src={UserList.Icons[this.state.user]}/>
         </Fab>

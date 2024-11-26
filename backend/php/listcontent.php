@@ -27,7 +27,7 @@ for ($index=0; $index < count($folderContent); $index++)
   {
       continue;
   }
-  if(!fileIsValid($folderContent[$index]))
+  if(!fileIsValid($folderContent[$index],VALID_FTYPE_IMG,VALID_FTYPE_VID))
   {
       continue;
   }
@@ -40,6 +40,6 @@ for ($index=0; $index < count($folderContent); $index++)
   $fileList .= ',"'.$folderContent[$index].'"';
 }
 
-die('{"status":true, "content":['.$fileList.']}');
+die('{"status":true, "files":['.$fileList.']}');
 
  ?>

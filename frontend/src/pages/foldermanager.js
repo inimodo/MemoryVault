@@ -64,7 +64,6 @@ class FolderManager extends React.Component{
   addFolder(folder)
   {
     Backend.addFolder(this.props.token,folder).then( (data) => {
-      console.log(data);
       if(data.status == true)
       {
         this.loadFolderList();
@@ -75,7 +74,6 @@ class FolderManager extends React.Component{
   addSubFolder(folder,subFolder)
   {
     Backend.addSubFolder(this.props.token,folder,subFolder).then( (data) => {
-      console.log(data);
       if(data.status == true)
       {
         this.loadFolderList();

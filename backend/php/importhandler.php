@@ -32,7 +32,7 @@ switch ($opcode) {
         continue;
       }
 
-      if(!fileIsValid($files[$index]))
+      if(!fileIsValid($files[$index],VALID_FTYPE_IMG,VALID_FTYPE_VID))
       {
         $failedFiles++;
         continue;

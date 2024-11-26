@@ -8,10 +8,23 @@ define("ACCESS_TOKEN","! TOKEN HERE !");
 define("DATA_PATH",$_SERVER['DOCUMENT_ROOT']."/derh/data/");
 define("FTP_PATH",$_SERVER['DOCUMENT_ROOT']."/derh/ftp/");
 
-function fileIsValid($file)
+define("VALID_FTYPE_IMG",array('jpg','jpeg','png'));
+define("VALID_FTYPE_VID",array('mp4','mov','wmv'));
+
+function fileIsValid($file,$valid_img,$valid_vid)
 {
-  define("VALID_FTYPE",array('jpg','jpeg','png','mp4','mov','wmv'));
   $type = strtolower(pathinfo($file,PATHINFO_EXTENSION));
-  return in_array($type,VALID_FTYPE);
+  return in_array($type,$valid_img) || in_array($type,$valid_vid);
+}
+
+function fileIsImg($file,$valid_img)
+{
+  $type = strtolower(pathinfo($file,PATHINFO_EXTENSION));
+  return in_array($type,$valid_img);
+}
+
+function getFileEnd($file)
+{
+  return strtolower(pathinfo($file,PATHINFO_EXTENSION));
 }
  ?>

@@ -19,6 +19,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import Backend from './../misc/websocket.js';
 import Typography from '@mui/material/Typography';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import { Dimensions } from "react-native";
 
 class ContentLister extends React.Component{
 
@@ -26,7 +29,8 @@ class ContentLister extends React.Component{
   {
     super(props);
     this.state = {
-      folders:[]
+      folders:[],
+      files:[]
     };
     this.loadFolderList = this.loadFolderList.bind(this);
     this.loadFolder = this.loadFolder.bind(this);
@@ -42,7 +46,19 @@ class ContentLister extends React.Component{
     Backend.listFolders(this.props.token).then( (data) => {
       if(data.status == true)
       {
-        this.setState({folders: data.folders});
+        var files = {}
+        for (var index = 0; index < data.folders.length; index++)
+        {
+          files[data.folders[index].folderName] = { files:[] };
+          for (var subIndex = 0; subIndex < data.folders[index].subFolders.length; subIndex++)
+          {
+            files[data.folders[index].folderName][data.folders[index].subFolders[subIndex].subFolderName] = { files:[] };
+          }
+        }
+        this.setState({
+          folders: data.folders,
+          files:files
+        });
       }
     });
   }
@@ -52,7 +68,15 @@ class ContentLister extends React.Component{
     Backend.listFolderContent(this.props.token,folder,subFolder).then( (data) => {
       if(data.status == true)
       {
-        console.log(data);
+        var files = {...this.state.files};
+        if(subFolder === "NONE")
+        {
+          files[folder].files = data.files;
+        }else
+        {
+          files[folder][subFolder].files = data.files;
+        }
+        this.setState({files:files});
       }
     });
   }
@@ -60,6 +84,18 @@ class ContentLister extends React.Component{
 
   render()
   {
+    const window = Dimensions.get("window");
+
+    var cols = 9;
+    if(window.width < 1000)
+    {
+      cols = 6;
+    }
+    if(window.width < 500)
+    {
+      cols = 3;
+    }
+
     return this.state.folders.map( (folder,index) => (
       <Accordion disableGutters key={folder.folderName} onChange={
         (e,expand) => {this.loadFolder(expand,folder.folderName,"NONE")}
@@ -73,6 +109,7 @@ class ContentLister extends React.Component{
           <Typography variant="subtitle1" sx={{ color:"gray" ,mr:"1%", width:"49%", textAlign:"right"}}>
             {folder.fileCount} <FontAwesomeIcon icon={faPhotoFilm} size="sm"/>
           </Typography>
+
         </AccordionSummary>
         <AccordionDetails>
         {
@@ -92,12 +129,33 @@ class ContentLister extends React.Component{
               </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                malesuada lacus ex, sit amet blandit leo lobortis eget.
+                <ImageList variant="masonry" cols={cols} gap={8}>
+                  {this.state.files[folder.folderName][subFolder.subFolderName].files.map((img) =>
+                    (
+                      <ImageListItem key={img}>
+                        <img
+                          src={Backend.getFile(this.props.token,img,folder.folderName,subFolder.subFolderName)}
+                        />
+                      </ImageListItem>
+                    )
+                  )}
+                </ImageList>
               </AccordionDetails>
             </Accordion>
           ))
         }
+
+        <ImageList variant="masonry" cols={cols} gap={8}>
+          {this.state.files[folder.folderName].files.map((img) =>
+            (
+              <ImageListItem key={img}>
+                <img
+                  src={Backend.getFile(this.props.token,img,folder.folderName,"NONE")}
+                />
+              </ImageListItem>
+            )
+          )}
+          </ImageList>
         </AccordionDetails>
       </Accordion>
     ));
@@ -105,15 +163,8 @@ class ContentLister extends React.Component{
 }
 export default ContentLister;
 /*
-<ImageList variant="masonry" cols={3} gap={8}>
-  {itemData.map((item) => (
-    <ImageListItem key={item.img}>
-      <img
-        src={`${item.img}?w=248&fit=crop&auto=format`}
-        alt={item.title}
-        loading="lazy"
-      />
-    </ImageListItem>
-  ))}
-</ImageList>
+
+<img
+  src={Backend.getFile(this.props.token,img,folder.folderName,"NONE")}
+/>
 */
