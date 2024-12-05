@@ -43,7 +43,7 @@ switch ($opcode) {
       {
         $filePath = DATA_PATH.$folder."/".$files[$index];
       }
-      $jsonData = '{"user":'.$user.',"cdate":'.filectime(FTP_PATH.$files[$index]).',"hashtags":[]}';
+      $jsonData = '{"user":'.$user.',"cdate":'.filectime(FTP_PATH.$files[$index]).',"inimg":[]}';
       $jsonDataPath = $filePath.".json";
 
       rename(FTP_PATH.$files[$index],$filePath);

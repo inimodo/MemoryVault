@@ -31,13 +31,19 @@ for ($index=0; $index < count($folderContent); $index++)
   {
       continue;
   }
+  $fIsImg = "false";
+  if(fileIsImg($folderContent[$index],VALID_FTYPE_IMG))
+  {
+    $fIsImg = "true";
+  }
+  $append = '{"fileName":"'.$folderContent[$index].'","isImage":'.$fIsImg.'}';
   if($first)
   {
     $first = false;
-    $fileList .= '"'.$folderContent[$index].'"';
+    $fileList .= $append;
     continue;
   }
-  $fileList .= ',"'.$folderContent[$index].'"';
+  $fileList .= ','.$append;
 }
 
 die('{"status":true, "files":['.$fileList.']}');

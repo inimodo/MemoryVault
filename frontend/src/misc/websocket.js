@@ -40,6 +40,7 @@ class Backend extends WebSocket
       opcode:0
     });
   }
+
   static async addFolder(token,folder)
   {
     return this.post("foldermanager.php",{
@@ -48,6 +49,7 @@ class Backend extends WebSocket
       folder:folder
     });
   }
+
   static async addSubFolder(token,folder,subfolder)
   {
     return this.post("foldermanager.php",{
@@ -57,6 +59,7 @@ class Backend extends WebSocket
       subfolder:subfolder
     });
   }
+
   static async listImportFiles(token)
   {
     return this.post("importhandler.php",
@@ -65,6 +68,7 @@ class Backend extends WebSocket
       opcode:0
     });
   }
+
   static async importFiles(token, folder,user, progressEvent)
   {
     var folderStruct = folder.split('/');
@@ -78,6 +82,7 @@ class Backend extends WebSocket
       user:user
     });
   }
+
   static async listFolderContent(token,folder,subFolder)
   {
     return this.post("listcontent.php",
@@ -87,6 +92,19 @@ class Backend extends WebSocket
       subfolder:subFolder
     });
   }
+
+  static async getImgData(token,file,folder,subFolder)
+  {
+    return this.post("imgdatamanager.php",
+    {
+      token:token,
+      opcode:0,
+      file:file,
+      folder:folder,
+      subfolder:subFolder,
+    });
+  }
+  
   static async uploadFile(token, file, folder,user, progressEvent)
   {
     var formData = new FormData();
@@ -103,19 +121,35 @@ class Backend extends WebSocket
      headers: { 'Content-Type': 'multipart/form-data' }
     });
   }
-  static getFile(token,file,folder,subFolder)
+
+  static async getContent(token,file,folder,subFolder,quality)
   {
-   var getRandomInt = ((min, max) => {
-      const minCeiled = Math.ceil(min);
-      const maxFloored = Math.floor(max);
-      return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
-    });
-    return Settings.backendPath + 'imgloader.php?token='+token
-                                              +'&file='+file
-                                              +'&quality='+Settings.prevImgQual
-                                              +'&folder='+folder
-                                              +'&subfolder='+subFolder
-                                              +'&'+getRandomInt(10000,99999);
+
+    const fileName = file.fileName;
+    var headers = {'Content-Type': 'video/mp4'};
+    if(file.isImage)
+    {
+      headers = {'Content-Type': 'image/jpeg'};
+    }
+    const body = {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: headers,
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: JSON.stringify({
+        token:token,
+        file:file.fileName,
+        folder:folder,
+        subfolder:subFolder,
+        quality:quality
+      })
+    }
+    const response = await fetch(Settings.backendPath + "imgloader.php", body);
+    return response;
   }
+
 }
 export default Backend;
