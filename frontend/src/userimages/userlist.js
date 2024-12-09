@@ -17,7 +17,7 @@ const UserData = {
   Names:UserNames,
   QuerryText:UserNames.map((name)=>"Von "+name).
   concat(UserNames.map((name)=>"Mit "+name)),
-  QuerryCode:UserNames.map((name)=>"!"+name).
-  concat(UserNames.map((name)=>"#"+name))
+  QuerryCode:UserNames.map((name,index)=>"!"+index).
+  concat(UserNames.map((name,index)=>"#"+index))
 };
 export default UserData;

@@ -55,7 +55,7 @@ class ContentLister extends React.Component{
   componentDidUpdate(prevProps)
   {
     if(this.props.refetch !== prevProps.refetch ||
-       this.props.search !== prevProps.search)
+       this.props.querry !== prevProps.querry)
     {
       this.loadFolderList();
     }
@@ -68,7 +68,7 @@ class ContentLister extends React.Component{
 
   loadFolderList()
   {
-    Backend.listFolders(this.props.token).then( (data) => {
+    Backend.listFolders(this.props.token,this.props.querry).then( (data) => {
       if(data.status == true)
       {
         var files = {}
@@ -111,7 +111,7 @@ class ContentLister extends React.Component{
       if(this.state.files[folder][subFolder].files.length !== 0) return;
     }
     if(isExpanded === false) return;
-    Backend.listFolderContent(this.props.token,folder,subFolder).then( (data) => {
+    Backend.listFolderContent(this.props.token,folder,subFolder,this.props.querry).then( (data) => {
       console.log(data);
       if(data.status == true)
       {

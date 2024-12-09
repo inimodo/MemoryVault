@@ -33,7 +33,7 @@ class MemoryVault extends React.Component{
       user:-1,
       showUploadMenu:false,
       showSettingsMenu:false,
-      search:{}
+      querry:""
     };
 
     this.selectUser = this.selectUser.bind(this);
@@ -101,7 +101,13 @@ class MemoryVault extends React.Component{
             if(UserList.QuerryText.includes(newValue))
             {
               this.setState({
-                search:UserList.QuerryText.indexOf(newValue)
+                querry:UserList.QuerryCode[UserList.QuerryText.indexOf(newValue)]
+              });
+            }
+            if(newValue === null)
+            {
+              this.setState({
+                querry:""
               });
             }
           }}
@@ -127,7 +133,7 @@ class MemoryVault extends React.Component{
           user={this.state.user}
           refetch={this.state.refetch}
           forceRefetch={this.forceRefetch}
-          search={this.state.search}
+          querry={this.state.querry}
         />
         <Fab sx={{position:'fixed', bottom: 15, right: 15, width: 50, height: 50 }}
           onClick={()=>{this.setState({showUploadMenu:true})}}>

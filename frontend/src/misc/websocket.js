@@ -33,11 +33,12 @@ class Backend extends WebSocket
     });
   }
 
-  static async listFolders(token)
+  static async listFolders(token,querry="")
   {
     return this.post("foldermanager.php",{
       token:token,
-      opcode:0
+      opcode:0,
+      querry:querry
     });
   }
 
@@ -83,13 +84,14 @@ class Backend extends WebSocket
     });
   }
 
-  static async listFolderContent(token,folder,subFolder)
+  static async listFolderContent(token,folder,subFolder,querry)
   {
     return this.post("listcontent.php",
     {
       token:token,
       folder:folder,
-      subfolder:subFolder
+      subfolder:subFolder,
+      querry:querry
     });
   }
 

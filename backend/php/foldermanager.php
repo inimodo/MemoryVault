@@ -12,6 +12,24 @@ if($token != ACCESS_TOKEN)
 $opcode = intval(preg_replace('/[^0-9\s]+/u','',$_POST['opcode']));
 $folder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_POST['folder']));
 $subFolder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_POST['subfolder']));
+$querry = preg_replace('/[^0-9#!\s]+/u','',$_POST['querry']);
+
+function countFiles($folder,$querry)
+{
+  include_once  "./settings.php";
+  $folderContent = scandir($folder);
+  $counter = 0;
+  for ($index=0; $index < count($folderContent); $index++)
+  {
+    if(is_dir($folder."/".$folderContent[$index])) continue;
+    if(!fileIsValid($folderContent[$index],VALID_FTYPE_IMG,VALID_FTYPE_VID)) continue;
+    if(imgQuerryCheck($folder."/".$folderContent[$index],$querry))
+    {
+      $counter++;
+    }
+  }
+  return $counter;
+}
 
 switch ($opcode)
 {
@@ -35,7 +53,9 @@ switch ($opcode)
             {
               $jsonSubFolderList .= ",";
             }
-            $fileCount = (count(scandir(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex]))-2)/2;
+
+            $fileCount = countFiles(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex], $querry);
+            //$fileCount = (count(scandir(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex]))-2)/2;
             $jsonSubFolderList .= '{"subFolderName":"'.str_replace("_"," ",$subFolders[$subFolderIndex]).'","fileCount":'.$fileCount.'}';
             $subFoldersAdded++;
           }
@@ -44,7 +64,8 @@ switch ($opcode)
         {
           $jsonFolderList .= ",";
         }
-        $fileCount = (count($subFolders)-2-$subFoldersAdded)/2;
+        $fileCount = countFiles(DATA_PATH.$folders[$folderIndex], $querry);
+        //$fileCount = (count($subFolders)-2-$subFoldersAdded)/2;
         $jsonFolderList .= '{"folderName":"'.str_replace("_"," ",$folders[$folderIndex]).'","fileCount":'.$fileCount.',"subFolders":['.$jsonSubFolderList.']}';
         $foldersAdded++;
       }

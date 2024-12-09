@@ -27,4 +27,22 @@ function getFileEnd($file)
 {
   return strtolower(pathinfo($file,PATHINFO_EXTENSION));
 }
+
+function imgQuerryCheck($file,$querry)
+{
+  if($querry == "") return true;
+
+  $user = intval(preg_replace('/[^0-9\s]+/u','',$querry));
+  $jsonData = json_decode(file_get_contents($file.".json"));
+
+  if(str_contains($querry,"!"))
+  {
+    if($jsonData->user == $user) return true;
+  }
+  if(str_contains($querry,"#"))
+  {
+    if(in_array($user,$jsonData->inimg)) return true;
+  }
+  return false;
+}
  ?>

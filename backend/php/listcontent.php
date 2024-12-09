@@ -11,6 +11,7 @@ if($token != ACCESS_TOKEN)
 
 $folder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_POST['folder']));
 $subFolder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_POST['subfolder']));
+$querry = preg_replace('/[^0-9#!\s]+/u','',$_POST['querry']);
 
 $filePath = DATA_PATH.$folder."/".$subFolder."/";
 if($subFolder == "NONE")
@@ -23,19 +24,16 @@ $fileList = "";
 $folderContent = scandir($filePath);
 for ($index=0; $index < count($folderContent); $index++)
 {
-  if(is_dir($folderContent[$index]))
-  {
-      continue;
-  }
-  if(!fileIsValid($folderContent[$index],VALID_FTYPE_IMG,VALID_FTYPE_VID))
-  {
-      continue;
-  }
+  if(is_dir($folderContent[$index]))continue;
+  if(!fileIsValid($folderContent[$index],VALID_FTYPE_IMG,VALID_FTYPE_VID))continue;
+  if(!imgQuerryCheck($filePath.$folderContent[$index],$querry))continue;
+
   $fIsImg = "false";
   if(fileIsImg($folderContent[$index],VALID_FTYPE_IMG))
   {
     $fIsImg = "true";
   }
+
   $append = '{"fileName":"'.$folderContent[$index].'","isImage":'.$fIsImg.'}';
   if($first)
   {
