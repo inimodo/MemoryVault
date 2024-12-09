@@ -99,12 +99,25 @@ class Backend extends WebSocket
     {
       token:token,
       opcode:0,
-      file:file,
+      file:file.fileName,
       folder:folder,
       subfolder:subFolder,
     });
   }
-  
+
+  static async getAddUserInImg(token,file,folder,subFolder,user)
+  {
+    return this.post("imgdatamanager.php",
+    {
+      token:token,
+      user:user,
+      opcode:1,
+      file:file.fileName,
+      folder:folder,
+      subfolder:subFolder,
+    });
+  }
+
   static async uploadFile(token, file, folder,user, progressEvent)
   {
     var formData = new FormData();

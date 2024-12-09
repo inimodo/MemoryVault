@@ -67,6 +67,14 @@ class UploadContent extends React.Component{
     this.loadImportFiles = this.loadImportFiles.bind(this);
   }
 
+  componentDidUpdate(prevProps)
+  {
+    if(this.props.refetch !== prevProps.refetch)
+    {
+      this.loadFolderList();
+    }
+  }
+
   componentDidMount()
   {
     this.loadFolderList();
@@ -151,6 +159,7 @@ class UploadContent extends React.Component{
       this.setState({
         doneUploading:true
       });
+      this.props.forceRefetch();
       return;
     }
 
@@ -188,6 +197,7 @@ class UploadContent extends React.Component{
             failedFiles: data.failed,
             movedFiles: data.moved
           });
+          this.props.forceRefetch();
         }
     });
   }

@@ -46,6 +46,14 @@ class FolderManager extends React.Component{
     this.createMenuContent = this.createMenuContent.bind(this);
   }
 
+  componentDidUpdate(prevProps)
+  {
+    if(this.props.refetch !== prevProps.refetch)
+    {
+      this.loadFolderList();
+    }
+  }
+
   componentDidMount()
   {
     this.loadFolderList();
@@ -66,7 +74,7 @@ class FolderManager extends React.Component{
     Backend.addFolder(this.props.token,folder).then( (data) => {
       if(data.status == true)
       {
-        this.loadFolderList();
+        this.props.forceRefetch();
       }
     });
   }
@@ -76,7 +84,8 @@ class FolderManager extends React.Component{
     Backend.addSubFolder(this.props.token,folder,subFolder).then( (data) => {
       if(data.status == true)
       {
-        this.loadFolderList();
+        this.props.forceRefetch();
+        //this.loadFolderList();
       }
     });
   }

@@ -11,5 +11,13 @@ import Tobias from './Tobias.png';
 
 const UserIcons = [Alina,Berkay,Bernd,Consti,Danir,Herman,Keusch,Liam,Markus,Tobias];
 const UserNames = ["Alina","Berkay","Bernd","Consti","Danir","Herman","Keusch","Liam","Markus","Tobias"];
-const UserData = {Icons:UserIcons,Names:UserNames};
+
+const UserData = {
+  Icons:UserIcons,
+  Names:UserNames,
+  QuerryText:UserNames.map((name)=>"Von "+name).
+  concat(UserNames.map((name)=>"Mit "+name)),
+  QuerryCode:UserNames.map((name)=>"!"+name).
+  concat(UserNames.map((name)=>"#"+name))
+};
 export default UserData;

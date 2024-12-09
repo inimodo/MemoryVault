@@ -10,6 +10,7 @@ if($token != ACCESS_TOKEN)
 }
 
 $op = intval(preg_replace('/[^0-9\s]+/u','',$_POST['opcode']));
+$user = intval(preg_replace('/[^0-9\s]+/u','',$_POST['user']));
 $folder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_POST['folder']));
 $subFolder = preg_replace('/[^a-zA-Z0-9_\s]+/u','',str_replace(" ","_",$_POST['subfolder']));
 $file = preg_replace('/[^a-zA-Z0-9\-\ ()._\s]+/u','',$_POST['file']);
@@ -28,10 +29,20 @@ $filePath .= $file.".json";
 
 switch ($op) {
   case 0: // List img data
-    echo file_get_contents($filePath);
+    $imgData = json_decode(file_get_contents($filePath));
+    $imgData->status = true;
+    echo json_encode($imgData);
     break;
-  case 1:
-
+  case 1: // Add user
+    $imgData = json_decode(file_get_contents($filePath));
+    if(in_array($user,$imgData->inimg))
+    {
+      die('{"status":false}');
+    }
+    array_push($imgData->inimg,$user);
+    file_put_contents($filePath,json_encode($imgData));
+    $imgData->status = true;
+    echo json_encode($imgData);
     break;
   case 2:
     break;

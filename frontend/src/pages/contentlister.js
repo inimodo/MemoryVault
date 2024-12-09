@@ -52,6 +52,15 @@ class ContentLister extends React.Component{
     this.openNext = this.openNext.bind(this);
   }
 
+  componentDidUpdate(prevProps)
+  {
+    if(this.props.refetch !== prevProps.refetch ||
+       this.props.search !== prevProps.search)
+    {
+      this.loadFolderList();
+    }
+  }
+
   componentDidMount()
   {
     this.loadFolderList();
@@ -68,6 +77,7 @@ class ContentLister extends React.Component{
           files[data.folders[index].folderName] = {
             files:[],
             content:[],
+            expanded:false,
             index:0
            };
           for (var subIndex = 0; subIndex < data.folders[index].subFolders.length; subIndex++)
@@ -75,10 +85,12 @@ class ContentLister extends React.Component{
             files[data.folders[index].folderName][data.folders[index].subFolders[subIndex].subFolderName] = {
               files:[],
               content:[],
+              expanded:false,
               index:0
             };
           }
         }
+        console.log(files);
         this.setState({
           folders: data.folders,
           files:files
@@ -89,14 +101,16 @@ class ContentLister extends React.Component{
 
   loadFolder(isExpanded,folder,subFolder)
   {
-    if(isExpanded === false) return;
     if(subFolder === "NONE")
     {
+      this.state.files[folder].expanded = isExpanded;
       if(this.state.files[folder].files.length !== 0) return;
     }else
     {
+      this.state.files[folder][subFolder].expanded = isExpanded;
       if(this.state.files[folder][subFolder].files.length !== 0) return;
     }
+    if(isExpanded === false) return;
     Backend.listFolderContent(this.props.token,folder,subFolder).then( (data) => {
       console.log(data);
       if(data.status == true)
@@ -169,8 +183,6 @@ class ContentLister extends React.Component{
 
   openNext(folder,subFolder,index)
   {
-    console.log(folder+" "+subFolder+" "+index);
-    console.log(this.state.files);
     var newIndex = index;
     var maxIndex = 0;
     if(subFolder === "NONE")
@@ -239,9 +251,12 @@ class ContentLister extends React.Component{
     }
 
     const files = this.state.folders.map( (folder,index) => (
-      <Accordion disableGutters key={folder.folderName} onChange={
-        (e,expand) => {this.loadFolder(expand,folder.folderName,"NONE")}
-      }>
+      <Accordion
+        disableGutters
+        expanded={this.state.files[folder.folderName].expanded}
+        key={folder.folderName}
+        onChange={(e,expand) => {this.loadFolder(expand,folder.folderName,"NONE")}}
+      >
         <AccordionSummary
           expandIcon={<FontAwesomeIcon icon={faChevronDown} size="sm"/>}
         >
@@ -257,9 +272,12 @@ class ContentLister extends React.Component{
         {
           folder.subFolders.map( (subFolder,index) =>
           (
-            <Accordion disableGutters key={subFolder.subFolderName} onChange={
-              (e,expand) => {this.loadFolder(expand,folder.folderName,subFolder.subFolderName);}
-            }>
+            <Accordion
+              disableGutters
+              expanded={this.state.files[folder.folderName][subFolder.subFolderName].expanded}
+              key={subFolder.subFolderName}
+              onChange={(e,expand) => {this.loadFolder(expand,folder.folderName,subFolder.subFolderName);}}
+            >
               <AccordionSummary
                 expandIcon={<FontAwesomeIcon icon={faChevronDown} />}
               >
@@ -313,6 +331,8 @@ class ContentLister extends React.Component{
     return(
       <React.Fragment>
         <ContentViewer
+          token={this.props.token}
+          user={this.props.user}
           showViewer={this.state.showViewer}
           showFile={this.state.showFile}
           showFilePath={this.state.showFilePath}

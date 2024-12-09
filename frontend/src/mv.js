@@ -16,6 +16,8 @@ import Avatar from '@mui/material/Avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderTree, faPhotoFilm, faCloudArrowUp} from '@fortawesome/free-solid-svg-icons'
 import Fab from '@mui/material/Fab';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 class MemoryVault extends React.Component{
 
@@ -25,16 +27,19 @@ class MemoryVault extends React.Component{
     const params = new URLSearchParams(window.location.search);
     this.state =
     {
+      refetch:0,
       allowAccess:false,
       token: params.get("token"),
       user:-1,
       showUploadMenu:false,
-      showSettingsMenu:false
+      showSettingsMenu:false,
+      search:{}
     };
 
     this.selectUser = this.selectUser.bind(this);
     this.selectPage = this.selectPage.bind(this);
     this.closeMenues = this.closeMenues.bind(this);
+    this.forceRefetch = this.forceRefetch.bind(this);
   }
 
   componentDidMount()
@@ -46,14 +51,26 @@ class MemoryVault extends React.Component{
       }
     });
   }
+
+  forceRefetch()
+  {
+      this.setState({
+        refetch:Math.random()
+      });
+  }
+
   selectUser(selUser)
   {
-    this.setState({user:selUser});
+    this.setState({
+      user:selUser
+    });
   }
 
   selectPage(page)
   {
-    this.setState({page:page});
+    this.setState({
+      page:page
+    });
   }
 
   closeMenues()
@@ -76,20 +93,41 @@ class MemoryVault extends React.Component{
 
   return (
       <React.Fragment>
+        <Autocomplete
+          freeSolo
+          options={UserList.QuerryText.map((querry) => querry)}
+          renderInput={(params) => <TextField {...params} label="freeSolo" />}
+          onChange={(event, newValue) => {
+            if(UserList.QuerryText.includes(newValue))
+            {
+              this.setState({
+                search:UserList.QuerryText.indexOf(newValue)
+              });
+            }
+          }}
+        />
         <UserSelect selectUser={this.selectUser} user={this.state.user}/>
         <FolderManager
           show={this.state.showSettingsMenu}
           close={this.closeMenues}
-          token={this.state.token}/>
+          token={this.state.token}
+          refetch={this.state.refetch}
+          forceRefetch={this.forceRefetch}
+        />
         <UploadContent
           show={this.state.showUploadMenu}
           close={this.closeMenues}
           token={this.state.token}
           user={this.state.user}
-          />
+          refetch={this.state.refetch}
+          forceRefetch={this.forceRefetch}
+        />
         <ContentLister
           token={this.state.token}
           user={this.state.user}
+          refetch={this.state.refetch}
+          forceRefetch={this.forceRefetch}
+          search={this.state.search}
         />
         <Fab sx={{position:'fixed', bottom: 15, right: 15, width: 50, height: 50 }}
           onClick={()=>{this.setState({showUploadMenu:true})}}>
