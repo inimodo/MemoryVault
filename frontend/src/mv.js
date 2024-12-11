@@ -93,25 +93,6 @@ class MemoryVault extends React.Component{
 
   return (
       <React.Fragment>
-        <Autocomplete
-          freeSolo
-          options={UserList.QuerryText.map((querry) => querry)}
-          renderInput={(params) => <TextField {...params} label="freeSolo" />}
-          onChange={(event, newValue) => {
-            if(UserList.QuerryText.includes(newValue))
-            {
-              this.setState({
-                querry:UserList.QuerryCode[UserList.QuerryText.indexOf(newValue)]
-              });
-            }
-            if(newValue === null)
-            {
-              this.setState({
-                querry:""
-              });
-            }
-          }}
-        />
         <UserSelect selectUser={this.selectUser} user={this.state.user}/>
         <FolderManager
           show={this.state.showSettingsMenu}
@@ -147,6 +128,40 @@ class MemoryVault extends React.Component{
           onClick={()=>{this.setState({user:-1})}}>
           <Avatar sx={{ width: 50, height: 50 }} src={UserList.Icons[this.state.user]}/>
         </Fab>
+
+        <Box sx={{
+            position:'fixed',
+            bottom: 15,
+            left: 80,
+            width: 150,
+            height: 50
+          }}
+        >
+          <Autocomplete
+            freeSolo
+            sx ={{
+              backgroundColor: "#121212",
+              borderRadius: "50px"
+            }}
+            options={UserList.QuerryText.map((querry) => querry)}
+            renderInput={(params) =>
+              <TextField {...params} sx={{"& .MuiOutlinedInput-root": {borderRadius: "50px"}}} label="Filter" />}
+            onChange={(event, newValue) => {
+              if(UserList.QuerryText.includes(newValue))
+              {
+                this.setState({
+                  querry:UserList.QuerryCode[UserList.QuerryText.indexOf(newValue)]
+                });
+              }
+              if(newValue === null)
+              {
+                this.setState({
+                  querry:""
+                });
+              }
+            }}
+          />
+        </Box>
       </React.Fragment>
     );
   }

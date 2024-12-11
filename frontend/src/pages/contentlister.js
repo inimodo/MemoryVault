@@ -101,13 +101,20 @@ class ContentLister extends React.Component{
 
   loadFolder(isExpanded,folder,subFolder)
   {
+    var files = {...this.state.files};
     if(subFolder === "NONE")
     {
-      this.state.files[folder].expanded = isExpanded;
+      files[folder].expanded = isExpanded;
+      this.setState({
+        files:files
+      });
       if(this.state.files[folder].files.length !== 0) return;
     }else
     {
-      this.state.files[folder][subFolder].expanded = isExpanded;
+      files[folder][subFolder].expanded = isExpanded;
+      this.setState({
+        files:files
+      });
       if(this.state.files[folder][subFolder].files.length !== 0) return;
     }
     if(isExpanded === false) return;
