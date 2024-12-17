@@ -1,5 +1,5 @@
  export default {
-   backendPath: "https://ini02.xyz/derh/php/",
+   backendPath: "http://mv24.ini02.xyz/php/",
    userSelectColumns:2,
    prevImgQual:10,
    viewImgQual:100

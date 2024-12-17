@@ -28,7 +28,7 @@ import { Dimensions } from "react-native";
 import Container from '@mui/material/Container';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import RNFetchBlob from "rn-fetch-blob";
+//import RNFetchBlob from "rn-fetch-blob";
 
 class ContentLister extends React.Component{
 
@@ -265,19 +265,22 @@ class ContentLister extends React.Component{
         expanded={this.state.files[folder.folderName].expanded}
         key={folder.folderName}
         onChange={(e,expand) => {this.loadFolder(expand,folder.folderName,"NONE")}}
+        sx={{ boxShadow: "none" , '&:before': {display: 'none'}}}
       >
         <AccordionSummary
           expandIcon={<FontAwesomeIcon icon={faChevronDown} size="sm"/>}
+          sx={{backgroundColor:"#121212"}}
         >
           <Typography variant="h6" sx={{ display: 'block', width:"50%"}}>
             <FontAwesomeIcon icon={faFolder} size="sm"/> {folder.folderName}
           </Typography>
           <Typography variant="subtitle1" sx={{ color:"gray" ,mr:"1%", width:"49%", textAlign:"right"}}>
-            {folder.fileCount} <FontAwesomeIcon icon={faPhotoFilm} size="sm"/>
+            {folder.fileCount} <FontAwesomeIcon icon={faPhotoFilm} size="sm" style={{marginRight:"1vh"}}/>
+            {folder.subFolderCount} <FontAwesomeIcon icon={faFolder} size="sm"/>
           </Typography>
 
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{backgroundColor:"#121212"}}>
         {
           folder.subFolders.map( (subFolder,index) =>
           (
@@ -286,9 +289,11 @@ class ContentLister extends React.Component{
               expanded={this.state.files[folder.folderName][subFolder.subFolderName].expanded}
               key={subFolder.subFolderName}
               onChange={(e,expand) => {this.loadFolder(expand,folder.folderName,subFolder.subFolderName);}}
+              sx={{ boxShadow: "none" , '&:before': {display: 'none'}}}
             >
               <AccordionSummary
                 expandIcon={<FontAwesomeIcon icon={faChevronDown} />}
+                sx={{backgroundColor:"#121212"}}
               >
               <Typography variant="h6" sx={{ display: 'block', width:"50%"}}>
                 <FontAwesomeIcon icon={faFolder} size="sm"/> {subFolder.subFolderName}
@@ -297,7 +302,7 @@ class ContentLister extends React.Component{
                 {subFolder.fileCount} <FontAwesomeIcon icon={faPhotoFilm} size="sm"/>
               </Typography>
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails sx={{backgroundColor:"#121212"}}>
                 <ImageList variant="masonry" cols={cols} gap={8}>
                   {this.state.files[folder.folderName][subFolder.subFolderName].content.map((img,index) =>
                     (

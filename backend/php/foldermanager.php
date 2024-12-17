@@ -44,6 +44,7 @@ switch ($opcode)
       {
         $subFolders = scandir(DATA_PATH.$folders[$folderIndex]);
         $subFoldersAdded = 0;
+        $fileCount  = 0;
         for ($subFolderIndex = 2; $subFolderIndex < count($subFolders); $subFolderIndex++)
         {
           if(is_dir(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex]))
@@ -54,9 +55,10 @@ switch ($opcode)
               $jsonSubFolderList .= ",";
             }
 
-            $fileCount = countFiles(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex], $querry);
+            $subFileCount = countFiles(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex], $querry);
+            $fileCount += $subFileCount;
             //$fileCount = (count(scandir(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex]))-2)/2;
-            $jsonSubFolderList .= '{"subFolderName":"'.str_replace("_"," ",$subFolders[$subFolderIndex]).'","fileCount":'.$fileCount.'}';
+            $jsonSubFolderList .= '{"subFolderName":"'.str_replace("_"," ",$subFolders[$subFolderIndex]).'","fileCount":'.$subFileCount.'}';
             $subFoldersAdded++;
           }
         }
@@ -64,9 +66,9 @@ switch ($opcode)
         {
           $jsonFolderList .= ",";
         }
-        $fileCount = countFiles(DATA_PATH.$folders[$folderIndex], $querry);
+        $fileCount += countFiles(DATA_PATH.$folders[$folderIndex], $querry);
         //$fileCount = (count($subFolders)-2-$subFoldersAdded)/2;
-        $jsonFolderList .= '{"folderName":"'.str_replace("_"," ",$folders[$folderIndex]).'","fileCount":'.$fileCount.',"subFolders":['.$jsonSubFolderList.']}';
+        $jsonFolderList .= '{"folderName":"'.str_replace("_"," ",$folders[$folderIndex]).'","fileCount":'.$fileCount.',"subFolderCount":'.$subFoldersAdded.',"subFolders":['.$jsonSubFolderList.']}';
         $foldersAdded++;
       }
     }

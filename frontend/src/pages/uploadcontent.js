@@ -277,12 +277,12 @@ class UploadContent extends React.Component{
         </Dialog>
         <Dialog disableEnforceFocus open={this.props.show} onClose={this.props.close} maxWidth="sm">
           <DialogTitle>
-            <FontAwesomeIcon icon={faCloudArrowUp} size="sm"/> Bilder und Fotos Hochladen
+            <FontAwesomeIcon icon={faCloudArrowUp} size="sm"/> Dateien Hochladen
           </DialogTitle>
           <Container fixed>
               <Tabs  value={this.state.page+""} onChange={this.setPage} >
-                <Tab label="Lokaler Upload"  value="1"/>
-                <Tab label="FTP Import"  value="2"/>
+                <Tab label="Von Gerät Hochladen"  value="1"/>
+                <Tab label="Von FTP Importieren"  value="2"/>
               </Tabs>
             <Box hidden={this.state.page!=1}>
               <Button
@@ -317,7 +317,7 @@ class UploadContent extends React.Component{
               </DialogActions>
             </Box>
             <Box hidden={this.state.page!=2}>
-              <Typography variant="caption" sx={{color:"indianred"}}>
+              <Typography variant="subtitle2" sx={{color:"#f44336",backgroundColor:"#212121",padding:"1.5vh",marginTop:"2vh",borderRadius:"1vh"}}>
                 <FontAwesomeIcon icon={faTriangleExclamation} size="sm"/> Achtung!
                 Nur ausgewählten Personen stehen die FTP Zugangsdaten zur verfügung.
                 Wenn du nicht in den FTP Import eingewiesen wurdest, bitte ich dich hier nichts anzufassen, danke.

@@ -128,8 +128,10 @@ class FolderManager extends React.Component{
           <FontAwesomeIcon icon={faFolderPlus} size="sm"/> {header}
         </DialogTitle>
         <DialogContentText sx={{ml:"2vh",mr:"2vh"}}>
-          <FontAwesomeIcon icon={faTriangleExclamation} size="sm"/> Achtung!
-          Ordner können nicht unbenannt oder gelöscht werden.<br/>
+          <Typography variant="subtitle2" sx={{color:"#f44336",backgroundColor:"#212121",padding:"1.5vh",borderRadius:"1vh"}}>
+            <FontAwesomeIcon icon={faTriangleExclamation} size="sm"/> Achtung!
+            Ordner können nicht unbenannt oder gelöscht werden.<br/>
+          </Typography>
         </DialogContentText>
 
         <TextField
@@ -173,7 +175,7 @@ class FolderManager extends React.Component{
       <React.Fragment>
         <Dialog open={this.props.show} onClose={this.props.close} maxWidth="xl" >
           <DialogTitle>
-            <FontAwesomeIcon icon={faFolderTree} size="sm"/> Ordner Manager
+            <FontAwesomeIcon icon={faFolderTree} size="sm"/> Ordner Verwaltung
           </DialogTitle>
           <Container fixed sx={{ mb:"2vh", width:"30vh" }}>
             <SimpleTreeView onItemSelectionToggle={this.handleSelection}>
