@@ -139,6 +139,24 @@ class Backend extends WebSocket
 
   static async getContent(token,file,folder,subFolder,quality)
   {
+    const fileName = file.fileName;
+    const body = {
+      token:token,
+      file:file.fileName,
+      folder:folder,
+      subfolder:subFolder,
+      quality:quality
+    };
+    const response = await Axios({
+      method:"POST",
+      url:Settings.backendPath + "imgloader.php",
+      responseType: "blob",
+      data:body
+    });
+    return response;
+  }
+  static async _getContent(token,file,folder,subFolder,quality)
+  {
 
     const fileName = file.fileName;
     var headers = {'Content-Type': 'video/mp4'};

@@ -28,6 +28,7 @@ import { Dimensions } from "react-native";
 import Container from '@mui/material/Container';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import RNFetchBlob from "rn-fetch-blob";
 
 class ContentLister extends React.Component{
 
@@ -154,18 +155,20 @@ class ContentLister extends React.Component{
     }
 
     Backend.getContent(this.props.token,file,folder,subFolder,Settings.prevImgQual)
-      .then(response => { return response.blob();})
       .then( (blob) =>{
+        console.log(blob);
         var files = {...this.state.files};
+
         if(subFolder === "NONE")
         {
-          files[folder].content[files[folder].index] = URL.createObjectURL(blob);
+          files[folder].content[files[folder].index] = URL.createObjectURL(blob.data);
           files[folder].index++;
         }else
         {
-          files[folder][subFolder].content[files[folder][subFolder].index] = URL.createObjectURL(blob);
+          files[folder][subFolder].content[files[folder][subFolder].index] = URL.createObjectURL(blob.data);
           files[folder][subFolder].index++;
         }
+
         this.setState({files:files},()=>{
           this.recLoadContent(folder,subFolder);
         });
@@ -230,11 +233,10 @@ class ContentLister extends React.Component{
       showFileIndex:index
     },()=>{
       Backend.getContent(this.props.token,file,folder,subFolder,Settings.viewImgQual)
-        .then(response => { return response.blob();})
         .then( (blob) =>{
           console.log(blob);
           this.setState({
-            showFilePath : URL.createObjectURL(blob)
+            showFilePath : URL.createObjectURL(blob.data)
           });
         }).catch((error)=>{
           console.log("failed");
