@@ -1,34 +1,23 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import Backend from './../misc/websocket.js';
-import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faFolderTree,
-  faCaretDown,
-  faFolder,
   faFolderPlus,
   faTriangleExclamation
 } from '@fortawesome/free-solid-svg-icons'
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import IconButton from '@mui/material/IconButton';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
-import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import Snackbar from '@mui/material/Snackbar';
 class FolderManager extends React.Component{
 
   constructor(props)
@@ -66,7 +55,7 @@ class FolderManager extends React.Component{
   loadFolderList()
   {
     Backend.listFolders(this.props.token).then( (data) => {
-      if(data.status == true)
+      if(data.status === true)
       {
         this.setState({folders: data.folders});
       }
@@ -81,7 +70,7 @@ class FolderManager extends React.Component{
         folderAddOpMsg:data.msg,
         showError:true
       });
-      if(data.status == true)
+      if(data.status === true)
       {
         this.props.forceRefetch();
       }
@@ -96,7 +85,7 @@ class FolderManager extends React.Component{
         folderAddOpMsg:data.msg,
         showError:true
       });
-      if(data.status == true)
+      if(data.status === true)
       {
         this.props.forceRefetch();
       }
@@ -138,12 +127,24 @@ class FolderManager extends React.Component{
     return  (
       <React.Fragment>
         <DialogTitle>
-          <FontAwesomeIcon icon={faFolderPlus} size="sm"/> {header}
+          <FontAwesomeIcon
+            icon={faFolderPlus}
+            size="sm"
+          />
+          {header}
         </DialogTitle>
-        <DialogContentText sx={{ml:"2vh",mr:"2vh"}}>
-          <Typography variant="subtitle2" sx={{color:"#f44336",backgroundColor:"#212121",padding:"1.5vh",borderRadius:"1vh"}}>
-            <FontAwesomeIcon icon={faTriangleExclamation} size="sm"/> Achtung!
-            Ordner können nicht unbenannt oder gelöscht werden.<br/>
+        <DialogContentText
+          sx={{ml:"2vh",mr:"2vh"}}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{color:"#f44336",backgroundColor:"#212121",padding:"1.5vh",borderRadius:"1vh"}}
+          >
+            <FontAwesomeIcon
+              icon={faTriangleExclamation}
+              size="sm"
+            />
+            Achtung! Ordner können nicht unbenannt oder gelöscht werden.
           </Typography>
         </DialogContentText>
 
@@ -159,24 +160,33 @@ class FolderManager extends React.Component{
         />
 
         <DialogActions>
-          <Button onClick={()=>{
-            this.setState({showCreateMenu:false, newFolderName:""})
-          }}>Abbrechen</Button>
+          <Button
+            onClick={()=>{
+              this.setState({
+                showCreateMenu:false,
+                newFolderName:""
+              })}}
+          >
+            Abbrechen
+          </Button>
           <Button
             disabled={!isValidName(this.state.newFolderName)}
             onClick={()=>{
-            if(isValidName(this.state.newFolderName))
-            {
-                if(this.state.createMenuFolder === "")
-                {
-                  this.addFolder(this.state.newFolderName);
-                }else
-                {
-                  this.addSubFolder(this.state.createMenuFolder,this.state.newFolderName);
-                }
-            }
-            this.setState({showCreateMenu:false, newFolderName:""})
-          }}>Erstellen</Button>
+              if(isValidName(this.state.newFolderName))
+              {
+                  if(this.state.createMenuFolder === "")
+                  {
+                    this.addFolder(this.state.newFolderName);
+                  }else
+                  {
+                    this.addSubFolder(this.state.createMenuFolder,this.state.newFolderName);
+                  }
+              }
+              this.setState({showCreateMenu:false, newFolderName:""})
+            }}
+          >
+            Erstellen
+          </Button>
         </DialogActions>
 
       </React.Fragment>
@@ -185,7 +195,7 @@ class FolderManager extends React.Component{
   render()
   {
     var severity = "success";
-    if(this.state.folderAddOpStatus == false)
+    if(this.state.folderAddOpStatus === false)
     {
       severity = "error";
     }
@@ -206,37 +216,81 @@ class FolderManager extends React.Component{
           {this.state.folderAddOpMsg}
         </Alert>
       </Snackbar>
-        <Dialog open={this.props.show} onClose={this.props.close} maxWidth="xl" >
+        <Dialog
+          open={this.props.show}
+          onClose={this.props.close}
+          maxWidth="xl"
+        >
           <DialogTitle>
-            <FontAwesomeIcon icon={faFolderTree} size="sm"/> Ordner Verwaltung
+            <FontAwesomeIcon
+              icon={faFolderTree}
+              size="sm"
+            /> Ordner Verwaltung
           </DialogTitle>
-          <Container fixed sx={{ mb:"2vh", width:"30vh" }}>
-            <SimpleTreeView onItemSelectionToggle={this.handleSelection}>
+          <Container
+            fixed
+            sx={{ mb:"2vh", width:"30vh" }}
+          >
+            <SimpleTreeView
+              onItemSelectionToggle={this.handleSelection}
+            >
             {
               this.state.folders.map( (folder) => (
-                <TreeItem key={folder.folderName} itemId={folder.folderName}  label={folder.folderName}>
+                <TreeItem
+                  key={folder.folderName}
+                  itemId={folder.folderName}
+                  label={folder.folderName}
+                >
                   {
                     folder.subFolders.map( (subFolder,index) =>
                     (
-                      <TreeItem key={subFolder} itemId={subFolder.subFolderName}  label={subFolder.subFolderName}/>
+                      <TreeItem
+                        key={subFolder}
+                        itemId={subFolder.subFolderName}
+                        label={subFolder.subFolderName}
+                      />
                     ))
                   }
-                  <TreeItem sx={{color:'text.secondary'}} itemId={"createSubFolder#"+folder.folderName}
-                    label={<><FontAwesomeIcon icon={faFolderPlus} size="sm"/> Unterordner Erstellen</>}/>
+                <TreeItem
+                  sx={{color:'text.secondary'}}
+                  itemId={"createSubFolder#"+folder.folderName}
+                  label={
+                    <>
+                      <FontAwesomeIcon
+                        icon={faFolderPlus}
+                        size="sm"
+                        style={{marginRight:"0.5vh"}}
+                      />
+                      Unterordner Erstellen
+                    </>
+                  }
+                />
                 </TreeItem>
               ))
             }
-            <TreeItem sx={{color:'text.secondary'}} itemId={"createFolder"}
-              label={<><FontAwesomeIcon icon={faFolderPlus} size="sm"/> Ordner Erstellen</>}/>
-
+            <TreeItem
+              sx={{color:'text.secondary'}}
+              itemId={"createFolder"}
+              label={
+                <>
+                  <FontAwesomeIcon
+                    icon={faFolderPlus}
+                    size="sm"
+                    style={{marginRight:"0.5vh"}}
+                  />
+                  Ordner Erstellen
+                </>
+              }
+            />
             </SimpleTreeView>
-
           </Container>
         </Dialog>
-        <Dialog open={this.state.showCreateMenu}  maxWidth="xl" >
-            {this.createMenuContent()}
+        <Dialog
+          open={this.state.showCreateMenu}
+          maxWidth="xl"
+        >
+          {this.createMenuContent()}
         </Dialog>
-
       </React.Fragment>
     );
   }

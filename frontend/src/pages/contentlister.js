@@ -1,21 +1,12 @@
 import React from 'react';
 import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Button from '@mui/material/Button';
 import Settings from "../misc/settings.js"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faCloudArrowUp,
   faPhotoFilm,
   faFolder,
-  faGear,
-  faFolderPlus,
-  faTriangleExclamation,
-  faCircleExclamation,
-  faCircleCheck,
-  faFileExcel,
   faChevronDown
 } from '@fortawesome/free-solid-svg-icons'
 import Backend from './../misc/websocket.js';
@@ -23,12 +14,7 @@ import Content from './subpages/content.js';
 import ContentViewer from './subpages/contentviewer.js';
 import Typography from '@mui/material/Typography';
 import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
 import { Dimensions } from "react-native";
-import Container from '@mui/material/Container';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-//import RNFetchBlob from "rn-fetch-blob";
 
 class ContentLister extends React.Component{
 
@@ -70,7 +56,7 @@ class ContentLister extends React.Component{
   loadFolderList()
   {
     Backend.listFolders(this.props.token,this.props.querry).then( (data) => {
-      if(data.status == true)
+      if(data.status === true)
       {
         var files = {}
         for (var index = 0; index < data.folders.length; index++)
@@ -119,7 +105,7 @@ class ContentLister extends React.Component{
     }
     if(isExpanded === false) return;
     Backend.listFolderContent(this.props.token,folder,subFolder,this.props.querry).then( (data) => {
-      if(data.status == true)
+      if(data.status === true)
       {
         var files = {...this.state.files};
         if(subFolder === "NONE")
@@ -143,16 +129,15 @@ class ContentLister extends React.Component{
     var file = null;
     if(subFolder === "NONE")
     {
-      if(this.state.files[folder].files.length == this.state.files[folder].index) return;
+      if(this.state.files[folder].files.length === this.state.files[folder].index) return;
       file = this.state.files[folder].files[this.state.files[folder].index];
     }else
     {
-      if(this.state.files[folder][subFolder].files.length == this.state.files[folder][subFolder].index) return;
+      if(this.state.files[folder][subFolder].files.length === this.state.files[folder][subFolder].index) return;
       file = this.state.files[folder][subFolder].files[this.state.files[folder][subFolder].index];
     }
 
-    Backend.getContent(this.props.token,file,folder,subFolder,Settings.prevImgQual)
-      .then( (blob) =>{
+    Backend.getContent(this.props.token,file,folder,subFolder,Settings.prevImgQual).then( (blob) =>{
         var files = {...this.state.files};
 
         if(subFolder === "NONE")
@@ -195,7 +180,7 @@ class ContentLister extends React.Component{
     {
       maxIndex = this.state.files[folder][subFolder].files.length;
     }
-    if(index == -1)
+    if(index === -1)
     {
       newIndex = maxIndex-1;
     }
@@ -225,8 +210,7 @@ class ContentLister extends React.Component{
       showFilePath:"",
       showFileIndex:index
     },()=>{
-      Backend.getContent(this.props.token,file,folder,subFolder,Settings.viewImgQual)
-        .then( (blob) =>{
+      Backend.getContent(this.props.token,file,folder,subFolder,Settings.viewImgQual).then( (blob) =>{
           this.setState({
             showFilePath : URL.createObjectURL(blob.data)
           });
@@ -253,23 +237,53 @@ class ContentLister extends React.Component{
         disableGutters
         expanded={this.state.files[folder.folderName].expanded}
         key={folder.folderName}
-        onChange={(e,expand) => {this.loadFolder(expand,folder.folderName,"NONE")}}
+        onChange={(e,expand) => {
+          this.loadFolder(expand,folder.folderName,"NONE")
+        }}
         sx={{ boxShadow: "none" , '&:before': {display: 'none'}}}
       >
         <AccordionSummary
-          expandIcon={<FontAwesomeIcon icon={faChevronDown} size="sm"/>}
+          expandIcon={
+            <FontAwesomeIcon
+              icon={faChevronDown}
+              size="sm"
+            />
+          }
           sx={{backgroundColor:"#121212"}}
         >
-          <Typography variant="h6" sx={{ display: 'block', width:"50%"}}>
-            <FontAwesomeIcon icon={faFolder} size="sm"/> {folder.folderName}
+          <Typography
+            variant="h6"
+            sx={{ display: 'block', width:"50%"}}
+          >
+            <FontAwesomeIcon
+              icon={faFolder}
+              size="sm"
+              style={{marginRight:"0.5vh"}}
+            />
+              {folder.folderName}
           </Typography>
-          <Typography variant="subtitle1" sx={{ color:"gray" ,mr:"1%", width:"49%", textAlign:"right"}}>
-            {folder.fileCount} <FontAwesomeIcon icon={faPhotoFilm} size="sm" style={{marginRight:"1vh"}}/>
-            {folder.subFolderCount} <FontAwesomeIcon icon={faFolder} size="sm"/>
+          <Typography
+            variant="subtitle1"
+            sx={{ color:"gray" ,mr:"1%", width:"49%", textAlign:"right"}}
+          >
+            {folder.fileCount}
+            <FontAwesomeIcon
+              icon={faPhotoFilm}
+              size="sm"
+              style={{marginLeft:"0.5vh",marginRight:"0.5vh"}}
+            />
+            {folder.subFolderCount}
+            <FontAwesomeIcon
+              icon={faFolder}
+              size="sm"
+              style={{marginLeft:"0.5vh"}}
+            />
           </Typography>
 
         </AccordionSummary>
-        <AccordionDetails sx={{backgroundColor:"#121212"}}>
+        <AccordionDetails
+          sx={{backgroundColor:"#121212"}}
+        >
         {
           folder.subFolders.map( (subFolder,index) =>
           (
@@ -277,22 +291,46 @@ class ContentLister extends React.Component{
               disableGutters
               expanded={this.state.files[folder.folderName][subFolder.subFolderName].expanded}
               key={subFolder.subFolderName}
-              onChange={(e,expand) => {this.loadFolder(expand,folder.folderName,subFolder.subFolderName);}}
+              onChange={(e,expand) => {
+                this.loadFolder(expand,folder.folderName,subFolder.subFolderName);
+              }}
               sx={{ boxShadow: "none" , '&:before': {display: 'none'}}}
             >
               <AccordionSummary
                 expandIcon={<FontAwesomeIcon icon={faChevronDown} />}
                 sx={{backgroundColor:"#121212"}}
               >
-              <Typography variant="h6" sx={{ display: 'block', width:"50%"}}>
-                <FontAwesomeIcon icon={faFolder} size="sm"/> {subFolder.subFolderName}
+              <Typography
+                variant="h6"
+                sx={{ display: 'block', width:"50%"}}
+              >
+                <FontAwesomeIcon
+                  icon={faFolder}
+                  size="sm"
+                  style={{marginRight:"0.5vh"}}
+                />
+                {subFolder.subFolderName}
               </Typography>
-              <Typography variant="subtitle1" sx={{ color:"gray" ,mr:"1%", width:"49%", textAlign:"right"}}>
-                {subFolder.fileCount} <FontAwesomeIcon icon={faPhotoFilm} size="sm"/>
+              <Typography
+                variant="subtitle1"
+                sx={{ color:"gray" ,mr:"1%", width:"49%", textAlign:"right"}}
+              >
+                {subFolder.fileCount}
+                <FontAwesomeIcon
+                  icon={faPhotoFilm}
+                  size="sm"
+                  style={{marginLeft:"0.5vh"}}
+                />
               </Typography>
               </AccordionSummary>
-              <AccordionDetails sx={{backgroundColor:"#121212"}}>
-                <ImageList variant="masonry" cols={cols} gap={8}>
+              <AccordionDetails
+                sx={{backgroundColor:"#121212"}}
+              >
+                <ImageList
+                  variant="masonry"
+                  cols={cols}
+                  gap={8}
+                >
                   {this.state.files[folder.folderName][subFolder.subFolderName].content.map((img,index) =>
                     (
                       <Content
@@ -312,7 +350,11 @@ class ContentLister extends React.Component{
           ))
         }
 
-        <ImageList variant="masonry" cols={cols} gap={8}>
+        <ImageList
+          variant="masonry"
+          cols={cols}
+          gap={8}
+        >
           {this.state.files[folder.folderName].content.map((img,index) =>
             (
               <Content

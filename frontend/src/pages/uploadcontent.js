@@ -7,8 +7,6 @@ import Tab from '@mui/material/Tab';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import Backend from './../misc/websocket.js';
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -19,17 +17,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCloudArrowUp,
   faPhotoFilm,
-  faFolder,
   faGear,
-  faFolderPlus,
   faTriangleExclamation,
   faCircleExclamation,
   faCircleCheck,
   faFileExcel
 } from '@fortawesome/free-solid-svg-icons'
-import DialogContentText from '@mui/material/DialogContentText';
-import axios from 'axios';
-import CircularProgress from '@mui/material/CircularProgress';
 import LinearProgress from '@mui/material/LinearProgress';
 import Grid from '@mui/material/Grid2';
 import Avatar from '@mui/material/Avatar';
@@ -83,7 +76,7 @@ class UploadContent extends React.Component{
   loadFolderList()
   {
     Backend.listFolders(this.props.token).then( (data) => {
-      if(data.status == true)
+      if(data.status === true)
       {
         var folderList = [];
         for (var index = 0; index < data.folders.length; index++)
@@ -117,7 +110,9 @@ class UploadContent extends React.Component{
 
   setPage(e,value)
   {
-    this.setState({ page: value});
+    this.setState({
+      page: value
+    });
   }
 
   decodeStatus(response)
@@ -125,36 +120,66 @@ class UploadContent extends React.Component{
     if(response.data.status)
     {
       return (
-        <Typography variant="caption" sx={{ml:'1vh', display: 'block',color:"lightgreen"}}>
-          <FontAwesomeIcon icon={faCircleCheck} size="sm"/> Erfolgreich Hochgeladen.
+        <Typography
+          variant="caption"
+          sx={{ml:'1vh', display: 'block',color:"lightgreen"}}
+        >
+          <FontAwesomeIcon
+            icon={faCircleCheck}
+            size="sm"
+          />
+            Erfolgreich Hochgeladen.
         </Typography>);
     }else
     {
       switch (response.data.code) {
         case 0:
         return (
-          <Typography variant="caption" sx={{ml:'1vh', display: 'block',color:"indianred"}}>
-            <FontAwesomeIcon icon={faCircleExclamation} size="sm"/> Hochladen fehlgeschlagen.
-          </Typography>);
-          break;
+          <Typography
+            variant="caption"
+            sx={{ml:'1vh', display: 'block',color:"indianred"}}
+          >
+            <FontAwesomeIcon
+              icon={faCircleExclamation}
+              size="sm"
+            />
+              Hochladen fehlgeschlagen.
+          </Typography>
+        );
         case 1:
         return (
-          <Typography variant="caption" sx={{ml:'1vh', display: 'block',color:"indianred"}}>
-            <FontAwesomeIcon icon={faFileExcel} size="sm"/> Verbotener Dateityp.
-          </Typography>);
-          break;
+          <Typography
+            variant="caption"
+            sx={{ml:'1vh', display: 'block',color:"indianred"}}
+          >
+            <FontAwesomeIcon
+              icon={faFileExcel}
+              size="sm"
+            />
+              Verbotener Dateityp.
+          </Typography>
+        );
+
         default:
         return (
-          <Typography variant="caption" sx={{ml:'1vh', display: 'block',color:"indianred"}}>
-            <FontAwesomeIcon icon={faCircleExclamation} size="sm"/> Unbekannter Fehler.
-          </Typography>);
+          <Typography
+            variant="caption"
+            sx={{ml:'1vh', display: 'block',color:"indianred"}}
+          >
+            <FontAwesomeIcon
+              icon={faCircleExclamation}
+              size="sm"
+            />
+              Unbekannter Fehler.
+          </Typography>
+        );
       }
     }
   }
 
   uploadFile()
   {
-    if(this.state.fileIndex == this.state.selectedFiles.length)
+    if(this.state.fileIndex === this.state.selectedFiles.length)
     {
       this.setState({
         doneUploading:true
@@ -172,7 +197,9 @@ class UploadContent extends React.Component{
         const { loaded, total } = progressEvent;
         var fprog = [...this.state.fileUploadProgress];
         fprog[this.state.fileIndex] = Math.floor((loaded * 100) / total);;
-        this.setState({ fileUploadProgress: fprog});
+        this.setState({
+          fileUploadProgress: fprog
+        });
 
     }).then((res) =>{
       var fstatus = [...this.state.fileUploadStatus];
@@ -191,7 +218,7 @@ class UploadContent extends React.Component{
       this.state.selectedFolder,
       this.props.user
     ).then((data) =>{
-        if(data.status == true)
+        if(data.status === true)
         {
           this.setState({
             failedFiles: data.failed,
@@ -205,9 +232,11 @@ class UploadContent extends React.Component{
   loadImportFiles()
   {
     Backend.listImportFiles(this.props.token).then( (data) => {
-      if(data.status == true)
+      if(data.status === true)
       {
-        this.setState({filesToImport: data.found});
+        this.setState({
+          filesToImport: data.found
+        });
       }
     });
   }
@@ -226,19 +255,34 @@ class UploadContent extends React.Component{
   getFileUploadInfo()
   {
     return Array.from(this.state.selectedFiles).map( (obj , index) =>(
-      <Grid container sx={{m:"2vh",mt:"0"}} key={index}>
-        <Grid size={2}>
+      <Grid
+        container
+        sx={{m:"2vh",mt:"0"}}
+        key={index}
+      >
+        <Grid
+          size={2}
+        >
           <Avatar
             src={URL.createObjectURL(this.state.selectedFiles[index])}
-            />
+          />
         </Grid>
-        <Grid size={10}>
-          <Typography variant="caption" sx={{ml:'1vh', lineHeight: 1.5, display: 'block' }}>
+        <Grid
+          size={10}
+        >
+          <Typography
+            variant="caption"
+            sx={{ml:'1vh', lineHeight: 1.5, display: 'block' }}
+          >
             {obj.name}
           </Typography>
           {this.state.fileUploadStatus[index]}
 
-          <LinearProgress sx={{ml:'1vh'}} variant="determinate" value={this.state.fileUploadProgress[index]} />
+          <LinearProgress
+            sx={{ml:'1vh'}}
+            variant="determinate"
+            value={this.state.fileUploadProgress[index]}
+          />
         </Grid>
       </Grid>
     ));
@@ -247,79 +291,146 @@ class UploadContent extends React.Component{
   render()
   {
     const FolderSelect = (()=>(
-      <FormControl fullWidth sx={{mb:"2vh",mt:"2vh"}}>
-        <InputLabel id="selFolder">Ordner</InputLabel>
+      <FormControl
+        fullWidth
+        sx={{mb:"2vh",mt:"2vh"}}
+      >
+        <InputLabel
+          id="selFolder"
+        >
+          Ordner
+        </InputLabel>
         <Select
           value={this.state.selectedFolder}
           label="Ordner"
           labelId="selFolder"
-          onChange={(event)=>{ this.setState({selectedFolder:event.target.value});}}
+          onChange={(event)=>{
+            this.setState({
+              selectedFolder:event.target.value
+            });
+          }}
         >
           {this.state.folderList.map( (folder, index) =>
-            (<MenuItem key={index} value={folder}>{folder}</MenuItem>))
+            (<MenuItem
+                key={index}
+                value={folder}
+              >
+                {folder}
+              </MenuItem>
+            ))
           }
         </Select>
       </FormControl>
     ));
     return (
       <React.Fragment>
-        <Dialog disableEnforceFocus  maxWidth="sm" open={this.state.isUploading} >
+        <Dialog
+          disableEnforceFocus
+          maxWidth="sm"
+          open={this.state.isUploading}
+        >
           <DialogTitle>
-            <FontAwesomeIcon icon={faGear} size="sm" spin/> Dateien werden Hochgeladen
+            <FontAwesomeIcon
+              icon={faGear}
+              size="sm"
+              spin
+            />
+            Dateien werden Hochgeladen
           </DialogTitle>
           {this.getFileUploadInfo()}
           <DialogActions>
             <Button
-            disabled={!this.state.doneUploading}
-            onClick={this.cleanUpFileUpload}
-            >Fertig</Button>
+              disabled={!this.state.doneUploading}
+              onClick={this.cleanUpFileUpload}
+            >
+              Fertig
+            </Button>
           </DialogActions>
         </Dialog>
-        <Dialog disableEnforceFocus open={this.props.show} onClose={this.props.close} maxWidth="sm">
+        <Dialog
+          disableEnforceFocus
+          open={this.props.show}
+          onClose={this.props.close}
+          maxWidth="sm"
+        >
           <DialogTitle>
-            <FontAwesomeIcon icon={faCloudArrowUp} size="sm"/> Dateien Hochladen
+            <FontAwesomeIcon
+              icon={faCloudArrowUp}
+              size="sm"
+            />
+            Dateien Hochladen
           </DialogTitle>
           <Container fixed>
-              <Tabs  value={this.state.page+""} onChange={this.setPage} >
-                <Tab label="Von Gerät Hochladen"  value="1"/>
-                <Tab label="Von FTP Importieren"  value="2"/>
+              <Tabs
+                value={this.state.page+""}
+                onChange={this.setPage}
+              >
+                <Tab
+                  label="Von Gerät Hochladen"
+                  value="1"
+                />
+                <Tab
+                  label="Von FTP Importieren"
+                  value="2"
+                />
               </Tabs>
-            <Box hidden={this.state.page!=1}>
+            <Box
+              hidden={this.state.page !== 1}
+            >
               <Button
                 fullWidth
                 component="label"
                 role={undefined}
                 variant="contained"
                 tabIndex={-1}
-                startIcon={<FontAwesomeIcon icon={faPhotoFilm} size="sm"/> }
+                startIcon={
+                  <FontAwesomeIcon
+                    icon={faPhotoFilm}
+                    size="sm"
+                  />
+               }
                 sx={{mb:"0vh",mt:"2vh"}}
               >
                 Dateien Auswählen
-                <input style={{display:"none"}}
+                <input
+                  style={{display:"none"}}
                   type="file"
-                  onChange={(event)=>{ this.setState({selectedFiles:event.target.files});}}
+                  onChange={(event)=>{
+                    this.setState({
+                      selectedFiles:event.target.files
+                    });
+                  }}
                   multiple
                 />
               </Button>
-              <Typography variant="subtitle2" component="h2">
+              <Typography
+                variant="subtitle2"
+                component="h2"
+              >
                 {this.state.selectedFiles.length!==0
                   && this.state.selectedFiles.length+" Dateien Ausgewählt."}
               </Typography>
-
               {FolderSelect()}
-
               <DialogActions>
                 <Button
-                disabled={this.state.selectedFiles.length === 0
-                  || this.state.selectedFolder === ''}
-                onClick={this.uploadAllFiles}
-                >Hochladen</Button>
+                  disabled={this.state.selectedFiles.length === 0 || this.state.selectedFolder === ''}
+                  onClick={this.uploadAllFiles}
+                >
+                  Hochladen
+                </Button>
               </DialogActions>
             </Box>
-            <Box hidden={this.state.page!=2}>
-              <Typography variant="subtitle2" sx={{color:"#f44336",backgroundColor:"#212121",padding:"1.5vh",marginTop:"2vh",borderRadius:"1vh"}}>
-                <FontAwesomeIcon icon={faTriangleExclamation} size="sm"/> Achtung!
-                Nur ausgewählten Personen stehen die FTP Zugangsdaten zur verfügung.
+            <Box
+              hidden={this.state.page !== 2}
+            >
+              <Typography
+                variant="subtitle2"
+                sx={{color:"#f44336",backgroundColor:"#212121",padding:"1.5vh",marginTop:"2vh",borderRadius:"1vh"}}
+              >
+                <FontAwesomeIcon
+                  icon={faTriangleExclamation}
+                  size="sm"
+                /> Achtung! Nur ausgewählten Personen stehen die FTP Zugangsdaten zur verfügung.
                 Wenn du nicht in den FTP Import eingewiesen wurdest, bitte ich dich hier nichts anzufassen, danke.
                 Falls du große Mengen an Fotos/Videos Hochladen möchtest, melde dich bitte bei mir.
                 Grüße Markus.
@@ -330,29 +441,40 @@ class UploadContent extends React.Component{
                 role={undefined}
                 variant="contained"
                 tabIndex={-1}
-                startIcon={<FontAwesomeIcon icon={faPhotoFilm} size="sm"/> }
+                startIcon={
+                  <FontAwesomeIcon
+                    icon={faPhotoFilm}
+                    size="sm"
+                  />
+                }
                 sx={{mb:"0vh",mt:"2vh"}}
                 onClick={this.loadImportFiles}
-              >Nach Dateien am Server Suchen</Button>
+              >
+                Nach Dateien am Server Suchen
+              </Button>
 
-              <Typography variant="subtitle2" component="h2">
-                {this.state.filesToImport !== 0
-                  && this.state.filesToImport+" Dateien wurden gefunden."}
+              <Typography
+                variant="subtitle2"
+                component="h2"
+              >
+                {this.state.filesToImport !== 0 && this.state.filesToImport+" Dateien wurden gefunden."}
               </Typography>
-              <Typography variant="subtitle2" component="h2">
+              <Typography
+                variant="subtitle2"
+                component="h2"
+              >
                 {(this.state.movedFiles !== 0 || this.state.failedFiles !== 0)
                   && this.state.movedFiles+" Dateien wurden Importiert. "
                   +this.state.failedFiles+" Dateien konnten nicht importiert werden."}
               </Typography>
-
               {FolderSelect()}
-
               <DialogActions>
                 <Button
-                disabled={this.state.selectedFolder === ''
-                || this.state.filesToImport === 0}
-                onClick={this.importAllFiles}
-                >Importieren</Button>
+                  disabled={this.state.selectedFolder === '' || this.state.filesToImport === 0}
+                  onClick={this.importAllFiles}
+                >
+                  Importieren
+                </Button>
               </DialogActions>
             </Box>
           </Container>

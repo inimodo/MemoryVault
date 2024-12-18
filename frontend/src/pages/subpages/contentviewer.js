@@ -1,30 +1,11 @@
 import React from 'react';
-import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import Button from '@mui/material/Button';
-import Settings from "../../misc/settings.js"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faCloudArrowUp,
-  faPhotoFilm,
-  faFolder,
-  faGear,
-  faFolderPlus,
-  faTriangleExclamation,
-  faCircleExclamation,
-  faCircleCheck,
-  faFileExcel,
   faUserPlus,
-  faCircleInfo
 } from '@fortawesome/free-solid-svg-icons'
 import Backend from '../../misc/websocket.js';
 import Typography from '@mui/material/Typography';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import { Dimensions } from "react-native";
-import Container from '@mui/material/Container';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid2';
@@ -94,6 +75,7 @@ class ContentViewer extends React.Component{
   {
     var viewerContent=(
       <img
+        alt=""
         onClick={
         ()=>{this.props.openNext(
           this.props.showFolder,
@@ -122,8 +104,14 @@ class ContentViewer extends React.Component{
           marginRight:"auto",
           borderRadius:"10px"
         }} controls>
-          <source src={this.props.showFilePath} type="video/mp4"/>
-          <source src={this.props.showFilePath} type="video/mov"/>
+          <source
+            src={this.props.showFilePath}
+            type="video/mp4"
+          />
+          <source
+            src={this.props.showFilePath}
+            type="video/mov"
+          />
         </video>
       );
     }
@@ -132,12 +120,15 @@ class ContentViewer extends React.Component{
       viewerContent = (
         <CircularProgress
           sx={{marginLeft:"calc( 50% - 20px)",marginTop:"10vh",marginBottom:"10vh"}}
-          color="inherit" />
+          color="inherit"
+        />
       );
     }
 
     var viewerImgData = (
-      <Box sx={{marginTop:"1vh"}}>
+      <Box
+        sx={{marginTop:"1vh"}}
+      >
         <Typography
           variant="caption"
           sx={{
@@ -177,7 +168,12 @@ class ContentViewer extends React.Component{
               marginLeft: "25px",
               marginTop: "4px"
             }}
-            endIcon={<FontAwesomeIcon icon={faUserPlus} size="lg"/>}
+            endIcon={
+              <FontAwesomeIcon
+                icon={faUserPlus}
+                size="lg"
+              />
+            }
             onClick={this.addMe}
           >
           </Button>
@@ -186,7 +182,9 @@ class ContentViewer extends React.Component{
     }
 
     var viewerInImg = (
-      <Box sx={{marginTop:"1vh"}}>
+      <Box
+        sx={{marginTop:"1vh"}}
+      >
         {userAvatars}
         {userAddButton}
       </Box>
@@ -203,7 +201,11 @@ class ContentViewer extends React.Component{
         sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
         open={this.props.showViewer}
         >
-          <Grid container spacing={0} sx={{width:"100%"}} >
+          <Grid
+            container
+            spacing={0}
+            sx={{width:"100%"}}
+          >
             <Grid
               size={1}
               onClick={
@@ -245,7 +247,8 @@ class ContentViewer extends React.Component{
               <Box
                 sx={{width:"100%",height:"20vh"}}
                 onClick={this.props.closeView}
-              ></Box>
+              >
+              </Box>
             </Grid>
           </Grid>
       </Backdrop>

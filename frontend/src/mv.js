@@ -7,14 +7,10 @@ import UserList from './userimages/userlist.js';
 import Backend from './misc/websocket.js';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFolderTree, faPhotoFilm, faCloudArrowUp} from '@fortawesome/free-solid-svg-icons'
+import { faFolderTree, faCloudArrowUp} from '@fortawesome/free-solid-svg-icons'
 import Fab from '@mui/material/Fab';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -45,9 +41,11 @@ class MemoryVault extends React.Component{
   componentDidMount()
   {
     Backend.checkToken(this.state.token).then( (data) => {
-      if(data.status == true)
+      if(data.status === true)
       {
-        this.setState({ allowAccess:true });
+        this.setState({
+          allowAccess:true
+        });
       }
     });
   }
@@ -85,15 +83,23 @@ class MemoryVault extends React.Component{
   if(!this.state.allowAccess)
   {
     return (
-      <Dialog open={true} maxWidth="xl">
-        <DialogTitle>Warte auf Zugriffsrechte...</DialogTitle>
+      <Dialog
+        open={true}
+        maxWidth="xl"
+      >
+        <DialogTitle>
+          Warte auf Zugriffsrechte...
+        </DialogTitle>
       </Dialog>
     );
   }
 
   return (
       <React.Fragment>
-        <UserSelect selectUser={this.selectUser} user={this.state.user}/>
+        <UserSelect
+          selectUser={this.selectUser}
+          user={this.state.user}
+        />
         <FolderManager
           show={this.state.showSettingsMenu}
           close={this.closeMenues}
@@ -116,19 +122,37 @@ class MemoryVault extends React.Component{
           forceRefetch={this.forceRefetch}
           querry={this.state.querry}
         />
-        <Fab sx={{position:'fixed', bottom: 15, right: 15, width: 50, height: 50 }}
-          onClick={()=>{this.setState({showUploadMenu:true})}}>
-          <FontAwesomeIcon icon={faCloudArrowUp} size="xl"/>
+        <Fab
+          sx={{position:'fixed', bottom: 15, right: 15, width: 50, height: 50 }}
+          onClick={()=>{
+            this.setState({
+              showUploadMenu:true
+            })}
+          }
+        >
+          <FontAwesomeIcon
+            icon={faCloudArrowUp}
+            size="xl"
+          />
         </Fab>
-        <Fab sx={{position:'fixed', bottom: 15, right: 80 , width: 50, height: 50 }}
-          onClick={()=>{this.setState({showSettingsMenu:true})}}>
-          <FontAwesomeIcon icon={faFolderTree} size="xl"/>
+        <Fab
+          sx={{position:'fixed', bottom: 15, right: 80 , width: 50, height: 50 }}
+          onClick={()=>{
+            this.setState({
+              showSettingsMenu:true
+            })}
+          }
+        >
+          <FontAwesomeIcon
+            icon={faFolderTree}
+            size="xl"
+          />
         </Fab>
-        <Fab sx={{position:'fixed', bottom: 15, left: 15 ,width: 50, height: 50 }}
+        <Fab
+          sx={{position:'fixed', bottom: 15, left: 15 ,width: 50, height: 50 }}
           onClick={()=>{this.setState({user:-1})}}>
           <Avatar sx={{ width: 50, height: 50 }} src={UserList.Icons[this.state.user]}/>
         </Fab>
-
         <Box sx={{
             position:'fixed',
             bottom: 15,
@@ -145,7 +169,11 @@ class MemoryVault extends React.Component{
             }}
             options={UserList.QuerryText.map((querry) => querry)}
             renderInput={(params) =>
-              <TextField {...params} sx={{"& .MuiOutlinedInput-root": {borderRadius: "50px"}}} label="Filter" />}
+              <TextField
+                {...params}
+                sx={{"& .MuiOutlinedInput-root": {borderRadius: "50px"}}}
+                label="Filter"
+              />}
             onChange={(event, newValue) => {
               if(UserList.QuerryText.includes(newValue))
               {

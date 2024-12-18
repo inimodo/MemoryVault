@@ -1,5 +1,4 @@
 import React from 'react';
-import Backend from './../../misc/websocket.js';
 import ImageListItem from '@mui/material/ImageListItem';
 import Skeleton from '@mui/material/Skeleton';
 
@@ -19,21 +18,28 @@ class Content extends React.Component{
     {
       return (
         <ImageListItem>
-          <Skeleton animation="wave" variant="rectangular" sx={{w:"100%",height:"10vh"}} />
+          <Skeleton
+            animation="wave"
+            variant="rectangular"
+            sx={{w:"100%",height:"10vh"}}
+          />
         </ImageListItem>
       );
     }
     if(this.props.file.isImage)
     {
       return (
-        <ImageListItem onClick={
-          ()=>this.props.onClick(
-          this.props.file,
-          this.props.folder,
-          this.props.subFolder,
-          this.props.index
-        )}>
+        <ImageListItem
+          onClick={
+            ()=>this.props.onClick(
+            this.props.file,
+            this.props.folder,
+            this.props.subFolder,
+            this.props.index
+          )}
+        >
         <img
+          alt=""
           src={this.props.img}
         />
         </ImageListItem>
@@ -41,21 +47,30 @@ class Content extends React.Component{
     }
 
     return (
-      <ImageListItem onClick={
-        ()=>this.props.onClick(
-        this.props.file,
-        this.props.folder,
-        this.props.subFolder,
-        this.props.index
-      )}>
-        <video style={{width:"100%"}}>
-          <source src={this.props.img} type="video/mp4"/>
-          <source src={this.props.img} type="video/mov"/>
+      <ImageListItem
+        onClick={
+          ()=>this.props.onClick(
+          this.props.file,
+          this.props.folder,
+          this.props.subFolder,
+          this.props.index
+        )}
+      >
+        <video
+          style={{width:"100%"}}
+        >
+          <source
+            src={this.props.img}
+            type="video/mp4"
+          />
+          <source
+            src={this.props.img}
+            type="video/mov"
+          />
         </video>
       </ImageListItem>
     );
 
   }
 }
-
 export default Content;
