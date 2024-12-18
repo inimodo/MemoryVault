@@ -27,7 +27,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-
+import Alert from '@mui/material/Alert';
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 class FolderManager extends React.Component{
 
   constructor(props)
@@ -37,7 +38,10 @@ class FolderManager extends React.Component{
       folders:[],
       showCreateMenu:false,
       createMenuFolder:"",
-      newFolderName:""
+      newFolderName:"",
+      folderAddOpStatus:false,
+      folderAddOpMsg:"",
+      showError:false
     };
     this.loadFolderList = this.loadFolderList.bind(this);
     this.addFolder = this.addFolder.bind(this);
@@ -72,6 +76,11 @@ class FolderManager extends React.Component{
   addFolder(folder)
   {
     Backend.addFolder(this.props.token,folder).then( (data) => {
+      this.setState({
+        folderAddOpStatus:data.status,
+        folderAddOpMsg:data.msg,
+        showError:true
+      });
       if(data.status == true)
       {
         this.props.forceRefetch();
@@ -82,10 +91,14 @@ class FolderManager extends React.Component{
   addSubFolder(folder,subFolder)
   {
     Backend.addSubFolder(this.props.token,folder,subFolder).then( (data) => {
+      this.setState({
+        folderAddOpStatus:data.status,
+        folderAddOpMsg:data.msg,
+        showError:true
+      });
       if(data.status == true)
       {
         this.props.forceRefetch();
-        //this.loadFolderList();
       }
     });
   }
@@ -171,8 +184,28 @@ class FolderManager extends React.Component{
   }
   render()
   {
+    var severity = "success";
+    if(this.state.folderAddOpStatus == false)
+    {
+      severity = "error";
+    }
     return (
       <React.Fragment>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        open={this.state.showError}
+        autoHideDuration={3000}
+        onClose={()=>this.setState({showError:false})}
+      >
+        <Alert
+          onClose={()=>this.setState({showError:false})}
+          severity= {severity}
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {this.state.folderAddOpMsg}
+        </Alert>
+      </Snackbar>
         <Dialog open={this.props.show} onClose={this.props.close} maxWidth="xl" >
           <DialogTitle>
             <FontAwesomeIcon icon={faFolderTree} size="sm"/> Ordner Verwaltung

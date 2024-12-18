@@ -57,7 +57,6 @@ switch ($opcode)
 
             $subFileCount = countFiles(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex], $querry);
             $fileCount += $subFileCount;
-            //$fileCount = (count(scandir(DATA_PATH.$folders[$folderIndex]."/".$subFolders[$subFolderIndex]))-2)/2;
             $jsonSubFolderList .= '{"subFolderName":"'.str_replace("_"," ",$subFolders[$subFolderIndex]).'","fileCount":'.$subFileCount.'}';
             $subFoldersAdded++;
           }
@@ -67,7 +66,6 @@ switch ($opcode)
           $jsonFolderList .= ",";
         }
         $fileCount += countFiles(DATA_PATH.$folders[$folderIndex], $querry);
-        //$fileCount = (count($subFolders)-2-$subFoldersAdded)/2;
         $jsonFolderList .= '{"folderName":"'.str_replace("_"," ",$folders[$folderIndex]).'","fileCount":'.$fileCount.',"subFolderCount":'.$subFoldersAdded.',"subFolders":['.$jsonSubFolderList.']}';
         $foldersAdded++;
       }
@@ -79,13 +77,13 @@ switch ($opcode)
     {
       die('{"status":true,"msg":"Ordner wurde erfolgreich erstellt."}');
     }
-    die('{"status":false,"msg":"Ordner konnte nicht erstellt werden."}');
+    die('{"status":false,"msg":"Ordner konnte nicht erstellt werden!"}');
   case 2: // Add subfolder
       if(mkdir(DATA_PATH.$folder."/".$subFolder))
       {
-        die('{"status":true,"msg":"Unter Ordner wurde erfolgreich erstellt."}');
+        die('{"status":true,"msg":"Unterordner wurde erfolgreich erstellt."}');
       }
-      die('{"status":false,"msg":"Unter Ordner  konnte nicht erstellt werden."}');
+      die('{"status":false,"msg":"Unterordner konnte nicht erstellt werden!"}');
 
   default:
     die('{"status":false}');

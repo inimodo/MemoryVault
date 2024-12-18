@@ -51,7 +51,6 @@ class ContentViewer extends React.Component{
     &&  this.props.showFile.fileName !== undefined )
     {
       Backend.getImgData(this.props.token,this.props.showFile,this.props.showFolder,this.props.showSubFolder).then( (data) => {
-        console.log(data);
         if(data.status === true)
         {
           this.setState({
@@ -65,7 +64,6 @@ class ContentViewer extends React.Component{
   addMe()
   {
     Backend.getAddUserInImg(this.props.token,this.props.showFile,this.props.showFolder,this.props.showSubFolder,this.props.user).then( (data) => {
-      console.log(data);
       if(data.status === true)
       {
         this.setState({
@@ -107,7 +105,8 @@ class ContentViewer extends React.Component{
           maxHeight:"65vh",
           display:"block",
           marginLeft:"auto",
-          marginRight:"auto"
+          marginRight:"auto",
+          borderRadius:"10px"
         }}
         src={this.props.showFilePath}
       />
@@ -120,7 +119,8 @@ class ContentViewer extends React.Component{
           maxHeight:"65vh",
           display:"block",
           marginLeft:"auto",
-          marginRight:"auto"
+          marginRight:"auto",
+          borderRadius:"10px"
         }} controls>
           <source src={this.props.showFilePath} type="video/mp4"/>
           <source src={this.props.showFilePath} type="video/mov"/>
@@ -131,7 +131,7 @@ class ContentViewer extends React.Component{
     {
       viewerContent = (
         <CircularProgress
-          sx={{marginLeft:"50%"}}
+          sx={{marginLeft:"calc( 50% - 20px)",marginTop:"10vh",marginBottom:"10vh"}}
           color="inherit" />
       );
     }
@@ -139,10 +139,10 @@ class ContentViewer extends React.Component{
     var viewerImgData = (
       <Box sx={{marginTop:"1vh"}}>
         <Typography
-          variant="subtitle1"
+          variant="caption"
           sx={{
             float: "left",
-            ml:'1vh',
+            ml:'0vh',
             display: 'block',
             color:"Gray"
           }}
@@ -168,24 +168,18 @@ class ContentViewer extends React.Component{
 
       if(!this.state.imgData.inimg.includes(this.props.user))
       {
-        var buttonText = "Ich bin zu sehen!";
-        if(this.state.imgData.inimg.length !== 0)
-        {
-          buttonText = "Ich bin auch zu sehen!";
-        }
         userAddButton = (
           <Button
-            variant="outlined"
+            variant="text"
             sx={{
               color:"white",
-              float:"left",
+              float:"right",
               marginLeft: "25px",
               marginTop: "4px"
             }}
-            startIcon={<FontAwesomeIcon icon={faUserPlus} size="lg"/>}
+            endIcon={<FontAwesomeIcon icon={faUserPlus} size="lg"/>}
             onClick={this.addMe}
           >
-            {buttonText}
           </Button>
         );
       }
@@ -209,9 +203,9 @@ class ContentViewer extends React.Component{
         sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
         open={this.props.showViewer}
         >
-          <Grid container spacing={0} sx={{width:"100%"}}>
+          <Grid container spacing={0} sx={{width:"100%"}} >
             <Grid
-              size={2}
+              size={1}
               onClick={
                 ()=>{this.props.openNext(
                   this.props.showFolder,
@@ -221,12 +215,13 @@ class ContentViewer extends React.Component{
             >
             </Grid>
             <Grid
-              size={8}
+              size={10}
               sx={{
                 border: "solid",
                 borderColor: "#121212",
                 backgroundColor: "#121212",
                 borderWidth: "2vh",
+                borderRadius:"10px"
               }}
               >
               <Stack>
@@ -237,7 +232,7 @@ class ContentViewer extends React.Component{
 
             </Grid>
             <Grid
-              size={2}
+              size={1}
               onClick={
                 ()=>{this.props.openNext(
                   this.props.showFolder,

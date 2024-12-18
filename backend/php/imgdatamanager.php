@@ -44,10 +44,6 @@ switch ($op) {
     $imgData->status = true;
     echo json_encode($imgData);
     break;
-  case 2:
-    break;
-
 }
-
 
  ?>

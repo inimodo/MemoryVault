@@ -28,9 +28,6 @@ $filePath .= $file;
 
 if(fileIsImg($file,VALID_FTYPE_IMG))
 {
-  //header('Content-Type: image/jpeg');
-  //header('Content-Length: ' . filesize($filePath));
-  //header('Content-Disposition: inline; filename="'.$filePath.'"');
   $image = NULL;
   switch (getFileEnd($file)) {
     case 'png':
@@ -40,15 +37,10 @@ if(fileIsImg($file,VALID_FTYPE_IMG))
     case 'jpg':
     $image = imagecreatefromjpeg($filePath);
       break;
-
   }
-
   imagejpeg($image, NULL, $quality) ;
 }else
 {
-  //header('Content-Type: video/mov');
-  //header('Content-Length: ' . filesize($filePath));
-  //header('Content-Disposition: inline; filename="'.$filePath.'"');
   echo file_get_contents($filePath);
 }
  ?>

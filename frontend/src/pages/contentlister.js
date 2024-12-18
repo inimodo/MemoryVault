@@ -91,7 +91,6 @@ class ContentLister extends React.Component{
             };
           }
         }
-        console.log(files);
         this.setState({
           folders: data.folders,
           files:files
@@ -120,7 +119,6 @@ class ContentLister extends React.Component{
     }
     if(isExpanded === false) return;
     Backend.listFolderContent(this.props.token,folder,subFolder,this.props.querry).then( (data) => {
-      console.log(data);
       if(data.status == true)
       {
         var files = {...this.state.files};
@@ -134,7 +132,6 @@ class ContentLister extends React.Component{
           files[folder][subFolder].content = Array(data.files.length).fill(null);
         }
         this.setState({files:files}, ()=> {
-          console.log(this.state.files);
           this.recLoadContent(folder,subFolder);
         });
       }
@@ -156,7 +153,6 @@ class ContentLister extends React.Component{
 
     Backend.getContent(this.props.token,file,folder,subFolder,Settings.prevImgQual)
       .then( (blob) =>{
-        console.log(blob);
         var files = {...this.state.files};
 
         if(subFolder === "NONE")
@@ -173,9 +169,6 @@ class ContentLister extends React.Component{
           this.recLoadContent(folder,subFolder);
         });
     }).catch((error)=>{
-      console.log("failed");
-      console.log(error);
-      console.log(error.message);
     });
   }
 
@@ -234,14 +227,10 @@ class ContentLister extends React.Component{
     },()=>{
       Backend.getContent(this.props.token,file,folder,subFolder,Settings.viewImgQual)
         .then( (blob) =>{
-          console.log(blob);
           this.setState({
             showFilePath : URL.createObjectURL(blob.data)
           });
         }).catch((error)=>{
-          console.log("failed");
-          console.log(error);
-          console.log(error.message);
         });
     });
   }
