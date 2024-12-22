@@ -254,38 +254,48 @@ class UploadContent extends React.Component{
 
   getFileUploadInfo()
   {
-    return Array.from(this.state.selectedFiles).map( (obj , index) =>(
-      <Grid
-        container
-        sx={{m:"2vh",mt:"0"}}
-        key={index}
-      >
+    return Array.from(this.state.selectedFiles).map( (obj , index) =>{
+      var linProg = (
+        <LinearProgress
+          sx={{ml:'1vh'}}
+          variant="determinate"
+          value={this.state.fileUploadProgress[index]}
+        />
+      );
+      if(index !== this.state.fileIndex)
+      {
+        linProg = (<></>);
+      }
+      return (
         <Grid
-          size={2}
+          container
+          sx={{m:"2vh",mt:"0.2vh",mb:"0.2vh"}}
+          key={index}
         >
-          <Avatar
-            src={URL.createObjectURL(this.state.selectedFiles[index])}
-          />
-        </Grid>
-        <Grid
-          size={10}
-        >
-          <Typography
-            variant="caption"
-            sx={{ml:'1vh', lineHeight: 1.5, display: 'block' }}
+          <Grid
+            size={10}
           >
-            {obj.name}
-          </Typography>
-          {this.state.fileUploadStatus[index]}
+            <Typography
+              variant="caption"
+              sx={{ml:'1vh', lineHeight: 1.5, display: 'block' }}
+            >
+              {obj.name}
+            </Typography>
+            {this.state.fileUploadStatus[index]}
 
-          <LinearProgress
-            sx={{ml:'1vh'}}
-            variant="determinate"
-            value={this.state.fileUploadProgress[index]}
-          />
+            {linProg}
+          </Grid>
+          <Grid
+            size={2}
+          >
+            <Avatar
+              src={URL.createObjectURL(this.state.selectedFiles[index])}
+              sx={{width:"3.5vh",height:"3.5vh",float:"right"}}
+            />
+          </Grid>
         </Grid>
-      </Grid>
-    ));
+      );
+    });
   }
 
   render()
@@ -334,8 +344,14 @@ class UploadContent extends React.Component{
               icon={faGear}
               size="sm"
               spin
+              style={{marginRight: "0.5vh"}}
             />
-            Dateien werden Hochgeladen
+            {this.state.fileIndex}/{this.state.selectedFiles.length} Dateien wurden Hochgeladen
+            <LinearProgress
+              sx={{width:"100%"}}
+              variant="determinate"
+              value={this.state.fileIndex/this.state.selectedFiles.length*100}
+            />
           </DialogTitle>
           {this.getFileUploadInfo()}
           <DialogActions>
@@ -357,6 +373,7 @@ class UploadContent extends React.Component{
             <FontAwesomeIcon
               icon={faCloudArrowUp}
               size="sm"
+              style={{marginRight:"0.5vh"}}
             />
             Dateien Hochladen
           </DialogTitle>
@@ -375,7 +392,7 @@ class UploadContent extends React.Component{
                 />
               </Tabs>
             <Box
-              hidden={this.state.page !== 1}
+              hidden={this.state.page != 1}
             >
               <Button
                 fullWidth
@@ -421,7 +438,7 @@ class UploadContent extends React.Component{
               </DialogActions>
             </Box>
             <Box
-              hidden={this.state.page !== 2}
+              hidden={this.state.page != 2}
             >
               <Typography
                 variant="subtitle2"

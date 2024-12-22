@@ -9,6 +9,7 @@ class Content extends React.Component{
     super(props);
     this.state={
       image: null,
+      height:Math.random() * (20 - 8) + 8
     };
   }
 
@@ -21,7 +22,7 @@ class Content extends React.Component{
           <Skeleton
             animation="wave"
             variant="rectangular"
-            sx={{w:"100%",height:"10vh"}}
+            sx={{w:"100%",height:this.state.height+"vh"}}
           />
         </ImageListItem>
       );

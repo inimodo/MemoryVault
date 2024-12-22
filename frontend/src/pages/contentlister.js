@@ -154,6 +154,7 @@ class ContentLister extends React.Component{
           this.recLoadContent(folder,subFolder);
         });
     }).catch((error)=>{
+      this.recLoadContent(folder,subFolder);
     });
   }
 
@@ -298,7 +299,7 @@ class ContentLister extends React.Component{
             >
               <AccordionSummary
                 expandIcon={<FontAwesomeIcon icon={faChevronDown} />}
-                sx={{backgroundColor:"#121212"}}
+                sx={{backgroundColor:"#121212",padding:0,paddingLeft:"2vh"}}
               >
               <Typography
                 variant="h6"
@@ -388,6 +389,8 @@ class ContentLister extends React.Component{
           closeView={this.closeView}
           />
         {files}
+        <div style={{width:"100%",height:"10vh"}}>
+        </div>
       </React.Fragment>
     );
   }

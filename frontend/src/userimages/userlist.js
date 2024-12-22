@@ -8,9 +8,14 @@ import Keusch from './Keusch.png';
 import Liam from './Liam.png';
 import Markus from './Markus.png';
 import Tobias from './Tobias.png';
+import Adam from './Adam.png';
+import Sarah from './Sarah.png';
+import Mitija from './Mitija.png';
+import Niklas from './Niklas.png';
+import Simon from './Simon.png';
 
-const UserIcons = [Alina,Berkay,Bernd,Consti,Danir,Herman,Keusch,Liam,Markus,Tobias];
-const UserNames = ["Alina","Berkay","Bernd","Consti","Danir","Herman","Keusch","Liam","Markus","Tobias"];
+const UserIcons = [Alina,Berkay,Bernd,Consti,Danir,Herman,Keusch,Liam,Markus,Tobias,Adam,Sarah,Mitija,Niklas,Simon];
+const UserNames = ["Alina","Berkay","Bernd","Consti","Danir","Herman","Keusch","Liam","Markus","Tobias","Adam","Sarah","Mitja","Niklas","Simon"];
 
 const UserData = {
   Icons:UserIcons,

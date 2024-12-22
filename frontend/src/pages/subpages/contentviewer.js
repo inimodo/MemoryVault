@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faUserPlus,
+  faCircleInfo,
 } from '@fortawesome/free-solid-svg-icons'
 import Backend from '../../misc/websocket.js';
 import Typography from '@mui/material/Typography';
@@ -62,7 +63,7 @@ class ContentViewer extends React.Component{
       return value
     });
 
-    var datetime = padding(date.getUTCDay())+"."+
+    var datetime = padding(date.getUTCDate())+"."+
                    padding(date.getUTCMonth())+"."+
                    padding(date.getUTCFullYear())+" "+
                    padding(date.getUTCHours())+":"+
@@ -119,7 +120,7 @@ class ContentViewer extends React.Component{
     {
       viewerContent = (
         <CircularProgress
-          sx={{marginLeft:"calc( 50% - 20px)",marginTop:"10vh",marginBottom:"10vh"}}
+          sx={{marginLeft:"calc( 50% - 20px)",marginTop:"20vh",marginBottom:"20vh"}}
           color="inherit"
         />
       );
@@ -127,7 +128,7 @@ class ContentViewer extends React.Component{
 
     var viewerImgData = (
       <Box
-        sx={{marginTop:"1vh"}}
+        sx={{marginTop:"0.5vh"}}
       >
         <Typography
           variant="caption"
@@ -138,6 +139,11 @@ class ContentViewer extends React.Component{
             color:"Gray"
           }}
         >
+          <FontAwesomeIcon
+            icon={faCircleInfo}
+            size="sm"
+            style={{marginRight:"0.5vh"}}
+          />
            Von {UserList.Names[this.state.imgData.user]} aufgenommen am {this.getDateString(this.state.imgData.cdate)}
         </Typography>
       </Box>

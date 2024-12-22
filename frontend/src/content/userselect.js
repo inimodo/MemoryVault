@@ -21,10 +21,15 @@ function UserSelect(props){
     }
     columnData[id % columns].push((
       <ListItem disableGutters key={id}>
-        <ListItemButton key={id} onClick={() => {
-          props.selectUser(id)}}>
-          <ListItemAvatar>
-            <Avatar src={user}/>
+        <ListItemButton
+          key={id}
+          onClick={() => {
+            props.selectUser(id)
+          }}
+          sx={{padding:0}}
+        >
+          <ListItemAvatar sx={{minWidth:24}}>
+            <Avatar src={user} sx={{width:24,height:24,marginRight:"0.5vh"}}/>
           </ListItemAvatar>
           <ListItemText primary={UserList.Names[id]} />
         </ListItemButton>
@@ -39,7 +44,7 @@ function UserSelect(props){
       <Grid container spacing={0}>
         {columnData.map((column,index)=>(
           <Grid size={12/columns} key={index}>
-            <List sx={{ pt: 0 }} dense={true}>
+            <List sx={{ pt: 0 }} dense={true} sx={{padding:0,paddingLeft:"2vh",paddingRight:"2vh",paddingBottom:"2vh"}}>
               {column.map((userField) => (userField))}
             </List>
           </Grid>
