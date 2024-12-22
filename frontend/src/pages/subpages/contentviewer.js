@@ -89,7 +89,7 @@ class ContentViewer extends React.Component{
           display:"block",
           marginLeft:"auto",
           marginRight:"auto",
-          borderRadius:"10px"
+          borderRadius:"4px"
         }}
         src={this.props.showFilePath}
       />
@@ -103,7 +103,7 @@ class ContentViewer extends React.Component{
           display:"block",
           marginLeft:"auto",
           marginRight:"auto",
-          borderRadius:"10px"
+          borderRadius:"4px"
         }} controls>
           <source
             src={this.props.showFilePath}
@@ -229,7 +229,7 @@ class ContentViewer extends React.Component{
                 borderColor: "#121212",
                 backgroundColor: "#121212",
                 borderWidth: "2vh",
-                borderRadius:"10px"
+                borderRadius:"4px"
               }}
               >
               <Stack>

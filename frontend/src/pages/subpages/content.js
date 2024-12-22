@@ -22,7 +22,7 @@ class Content extends React.Component{
           <Skeleton
             animation="wave"
             variant="rectangular"
-            sx={{w:"100%",height:this.state.height+"vh"}}
+            sx={{w:"100%",height:this.state.height+"vh",borderRadius:"4px"}}
           />
         </ImageListItem>
       );
@@ -42,6 +42,7 @@ class Content extends React.Component{
         <img
           alt=""
           src={this.props.img}
+          style={{borderRadius:"4px"}}
         />
         </ImageListItem>
       );
@@ -58,7 +59,7 @@ class Content extends React.Component{
         )}
       >
         <video
-          style={{width:"100%"}}
+          style={{width:"100%",borderRadius:"4px"}}
         >
           <source
             src={this.props.img}

@@ -39,12 +39,28 @@ function UserSelect(props){
   });
 
   return(
-    <Dialog open={props.user==-1} maxWidth="xl">
-      <DialogTitle>Wer bist du?</DialogTitle>
-      <Grid container spacing={0}>
+    <Dialog
+      open={props.user==-1}
+      maxWidth="xl"
+    >
+      <DialogTitle>
+        Wer bist du?
+      </DialogTitle>
+      <Grid
+        sx={{paddingLeft:"24px",paddingRight:"24px"}}
+        container
+        spacing={0}
+      >
         {columnData.map((column,index)=>(
-          <Grid size={12/columns} key={index}>
-            <List sx={{ pt: 0 }} dense={true} sx={{padding:0,paddingLeft:"2vh",paddingRight:"2vh",paddingBottom:"2vh"}}>
+          <Grid
+            size={12/columns}
+            key={index}
+          >
+            <List
+              sx={{ pt: 0 }}
+              dense={true}
+              sx={{padding:0,paddingRight:"12px",paddingBottom:"2vh"}}
+            >
               {column.map((userField) => (userField))}
             </List>
           </Grid>

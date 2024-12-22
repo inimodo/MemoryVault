@@ -134,15 +134,16 @@ class FolderManager extends React.Component{
           {header}
         </DialogTitle>
         <DialogContentText
-          sx={{ml:"2vh",mr:"2vh"}}
+          sx={{ml:"24px",mr:"24px"}}
         >
           <Typography
             variant="subtitle2"
-            sx={{color:"#f44336",backgroundColor:"#212121",padding:"1.5vh",borderRadius:"1vh"}}
+            sx={{color:"#f44336",backgroundColor:"#212121",padding:"1.5vh",borderRadius:"4px"}}
           >
             <FontAwesomeIcon
               icon={faTriangleExclamation}
               size="sm"
+              style={{marginRight:"1vh"}}
             />
             Achtung! Ordner können nicht unbenannt oder gelöscht werden.
           </Typography>
@@ -152,7 +153,7 @@ class FolderManager extends React.Component{
           error={!isValidName(this.state.newFolderName)}
           helperText={!isValidName(this.state.newFolderName)
             && "Ordnernamen dürfen nur Buchtstaben oder Zahlen beinhalten."}
-          sx={{m:"2vh"}}
+          sx={{m:"24px"}}
           label={this.state.createMenuFolder+"/"+this.state.newFolderName}
           onChange={(event) => {
             this.setState({newFolderName:event.target.value});
@@ -220,16 +221,18 @@ class FolderManager extends React.Component{
           open={this.props.show}
           onClose={this.props.close}
           maxWidth="xl"
+          sx={{borderRadius:"1vh"}}
         >
           <DialogTitle>
             <FontAwesomeIcon
               icon={faFolderTree}
               size="sm"
-            /> Ordner Verwaltung
+              style={{paddingRight:"1vh"}}
+            />
+            Ordner Verwaltung
           </DialogTitle>
           <Container
-            fixed
-            sx={{ mb:"2vh", width:"30vh" }}
+            sx={{ mb:"2vh", minWidth:"30vh",paddingLeft:"24px",paddingRight:"24px" }}
           >
             <SimpleTreeView
               onItemSelectionToggle={this.handleSelection}
@@ -252,14 +255,14 @@ class FolderManager extends React.Component{
                     ))
                   }
                 <TreeItem
-                  sx={{color:'text.secondary'}}
+                  sx={{color:'text.secondary',padding:0}}
                   itemId={"createSubFolder#"+folder.folderName}
                   label={
                     <>
                       <FontAwesomeIcon
                         icon={faFolderPlus}
                         size="sm"
-                        style={{marginRight:"0.5vh"}}
+                        style={{paddingRight:"1vh"}}
                       />
                       Unterordner Erstellen
                     </>
@@ -276,7 +279,7 @@ class FolderManager extends React.Component{
                   <FontAwesomeIcon
                     icon={faFolderPlus}
                     size="sm"
-                    style={{marginRight:"0.5vh"}}
+                    style={{paddingRight:"1vh"}}
                   />
                   Ordner Erstellen
                 </>

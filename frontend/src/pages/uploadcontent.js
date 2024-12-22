@@ -196,7 +196,7 @@ class UploadContent extends React.Component{
       (progressEvent)=>{
         const { loaded, total } = progressEvent;
         var fprog = [...this.state.fileUploadProgress];
-        fprog[this.state.fileIndex] = Math.floor((loaded * 100) / total);;
+        fprog[this.state.fileIndex] = Math.floor((loaded * 100) / total);
         this.setState({
           fileUploadProgress: fprog
         });
@@ -338,6 +338,7 @@ class UploadContent extends React.Component{
           disableEnforceFocus
           maxWidth="sm"
           open={this.state.isUploading}
+          sx={{borderRadius:"1vh"}}
         >
           <DialogTitle>
             <FontAwesomeIcon
@@ -368,16 +369,20 @@ class UploadContent extends React.Component{
           open={this.props.show}
           onClose={this.props.close}
           maxWidth="sm"
+          sx={{borderRadius:"1vh"}}
         >
           <DialogTitle>
             <FontAwesomeIcon
               icon={faCloudArrowUp}
               size="sm"
-              style={{marginRight:"0.5vh"}}
+              style={{marginRight:"1vh"}}
             />
             Dateien Hochladen
           </DialogTitle>
-          <Container fixed>
+          <Container
+            sx={{paddingLeft:"24px",paddingRight:"24px"}}
+            fixed
+          >
               <Tabs
                 value={this.state.page+""}
                 onChange={this.setPage}
@@ -442,11 +447,12 @@ class UploadContent extends React.Component{
             >
               <Typography
                 variant="subtitle2"
-                sx={{color:"#f44336",backgroundColor:"#212121",padding:"1.5vh",marginTop:"2vh",borderRadius:"1vh"}}
+                sx={{color:"#f44336",backgroundColor:"#212121",padding:"1.5vh",marginTop:"2vh",borderRadius:"4px"}}
               >
                 <FontAwesomeIcon
                   icon={faTriangleExclamation}
                   size="sm"
+                  style={{paddingRight:"1vh"}}
                 /> Achtung! Nur ausgewählten Personen stehen die FTP Zugangsdaten zur verfügung.
                 Wenn du nicht in den FTP Import eingewiesen wurdest, bitte ich dich hier nichts anzufassen, danke.
                 Falls du große Mengen an Fotos/Videos Hochladen möchtest, melde dich bitte bei mir.

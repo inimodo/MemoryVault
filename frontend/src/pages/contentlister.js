@@ -259,7 +259,7 @@ class ContentLister extends React.Component{
             <FontAwesomeIcon
               icon={faFolder}
               size="sm"
-              style={{marginRight:"0.5vh"}}
+              style={{paddingRight:"1vh"}}
             />
               {folder.folderName}
           </Typography>
@@ -308,7 +308,7 @@ class ContentLister extends React.Component{
                 <FontAwesomeIcon
                   icon={faFolder}
                   size="sm"
-                  style={{marginRight:"0.5vh"}}
+                  style={{paddingRight:"1vh"}}
                 />
                 {subFolder.subFolderName}
               </Typography>

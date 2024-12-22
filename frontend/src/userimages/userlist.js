@@ -15,7 +15,7 @@ import Niklas from './Niklas.png';
 import Simon from './Simon.png';
 
 const UserIcons = [Alina,Berkay,Bernd,Consti,Danir,Herman,Keusch,Liam,Markus,Tobias,Adam,Sarah,Mitija,Niklas,Simon];
-const UserNames = ["Alina","Berkay","Bernd","Consti","Danir","Herman","Keusch","Liam","Markus","Tobias","Adam","Sarah","Mitja","Niklas","Simon"];
+const UserNames = ["Alina","Berkay","Bernd","Consti","Danir","Herman","Keusch","Liam","Markus","Tobias","Adam","Sarah","Mitja","Niki","Simon"];
 
 const UserData = {
   Icons:UserIcons,
