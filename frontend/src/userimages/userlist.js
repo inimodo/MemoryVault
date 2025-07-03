@@ -3,7 +3,7 @@ import Berkay from './Berkay.png';
 import Bernd from './Bernd.png';
 import Consti from './Consti.png';
 import Danir from './Danir.png';
-import Herman from './Herman.png';
+import Hermann from './Hermann.png';
 import Keusch from './Keusch.png';
 import Liam from './Liam.png';
 import Markus from './Markus.png';
@@ -14,8 +14,8 @@ import Mitija from './Mitija.png';
 import Niklas from './Niklas.png';
 import Simon from './Simon.png';
 
-const UserIcons = [Alina,Berkay,Bernd,Consti,Danir,Herman,Keusch,Liam,Markus,Tobias,Adam,Sarah,Mitija,Niklas,Simon];
-const UserNames = ["Alina","Berkay","Bernd","Consti","Danir","Herman","Keusch","Liam","Markus","Tobias","Adam","Sarah","Mitja","Niki","Simon"];
+const UserIcons = [Alina,Berkay,Bernd,Consti,Danir,Hermann,Keusch,Liam,Markus,Tobias,Adam,Sarah,Mitija,Niklas,Simon];
+const UserNames = ["Alina","Berkay","Bernd","Consti","Danir","Hermann","Keusch","Liam","Markus","Tobias","Adam","Sarah","Mitja","Niki","Simon"];
 
 const UserData = {
   Icons:UserIcons,

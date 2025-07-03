@@ -21,7 +21,10 @@ import {
   faTriangleExclamation,
   faCircleExclamation,
   faCircleCheck,
-  faFileExcel
+  faFileExcel,
+  faFilm,
+  faHourglassStart,
+  faCircleNotch
 } from '@fortawesome/free-solid-svg-icons'
 import LinearProgress from '@mui/material/LinearProgress';
 import Grid from '@mui/material/Grid2';
@@ -122,41 +125,74 @@ class UploadContent extends React.Component{
       return (
         <Typography
           variant="caption"
-          sx={{ml:'1vh', display: 'block',color:"lightgreen"}}
+          sx={{ml:'0', display: 'block',color:"lightgreen"}}
         >
           <FontAwesomeIcon
             icon={faCircleCheck}
             size="sm"
+            style={{marginRight:'0.5vh'}}
           />
-            Erfolgreich Hochgeladen.
+            Erfolgreich!
         </Typography>);
     }else
     {
       switch (response.data.code) {
+        case -2:
+        return (
+          <Typography
+            variant="caption"
+            sx={{ml:'0', display: 'block',color:"gray"}}
+          >
+            <FontAwesomeIcon
+              icon={faGear}
+              spin
+              size="sm"
+              style={{marginRight:'0.5vh'}}
+            />
+              Wird hochgeladen...
+          </Typography>
+        );
+        case 0:
+        case -1:
+        return (
+          <Typography
+            variant="caption"
+            sx={{ml:'0', display: 'block',color:"gray"}}
+          >
+            <FontAwesomeIcon
+              icon={faHourglassStart}
+              size="sm"
+              style={{marginRight:'0.5vh'}}
+            />
+              Wartet auf upload...
+          </Typography>
+        );
         case 0:
         return (
           <Typography
             variant="caption"
-            sx={{ml:'1vh', display: 'block',color:"indianred"}}
+            sx={{ml:'0', display: 'block',color:"indianred"}}
           >
             <FontAwesomeIcon
               icon={faCircleExclamation}
               size="sm"
+              style={{marginRight:'0.5vh'}}
             />
-              Hochladen fehlgeschlagen.
+              Fehler: Datei zu groß.
           </Typography>
         );
         case 1:
         return (
           <Typography
             variant="caption"
-            sx={{ml:'1vh', display: 'block',color:"indianred"}}
+            sx={{ml:'0', display: 'block',color:"indianred"}}
           >
             <FontAwesomeIcon
               icon={faFileExcel}
               size="sm"
+              style={{marginRight:'0.5vh'}}
             />
-              Verbotener Dateityp.
+              Fehler: Verbotener Dateityp.
           </Typography>
         );
 
@@ -164,13 +200,14 @@ class UploadContent extends React.Component{
         return (
           <Typography
             variant="caption"
-            sx={{ml:'1vh', display: 'block',color:"indianred"}}
+            sx={{ml:'0', display: 'block',color:"indianred"}}
           >
             <FontAwesomeIcon
               icon={faCircleExclamation}
               size="sm"
+              style={{marginRight:'0.5vh'}}
             />
-              Unbekannter Fehler.
+              Fehler: Unbekannt.
           </Typography>
         );
       }
@@ -197,8 +234,11 @@ class UploadContent extends React.Component{
         const { loaded, total } = progressEvent;
         var fprog = [...this.state.fileUploadProgress];
         fprog[this.state.fileIndex] = Math.floor((loaded * 100) / total);
+        var fstatus = [...this.state.fileUploadStatus];
+        fstatus[this.state.fileIndex] = this.decodeStatus({data:{status:false,code:-2}});
         this.setState({
-          fileUploadProgress: fprog
+          fileUploadProgress: fprog,
+          fileUploadStatus: fstatus
         });
 
     }).then((res) =>{
@@ -246,7 +286,7 @@ class UploadContent extends React.Component{
     this.setState({
       isUploading:true,
       fileUploadProgress: Array(this.state.selectedFiles.length).fill(0),
-      fileUploadStatus: Array(this.state.selectedFiles.length).fill(<></>),
+      fileUploadStatus: Array(this.state.selectedFiles.length).fill(this.decodeStatus({data:{status:false,code:-1}})),
       fileIndex:0
     });
     this.uploadFile();
@@ -257,7 +297,7 @@ class UploadContent extends React.Component{
     return Array.from(this.state.selectedFiles).map( (obj , index) =>{
       var linProg = (
         <LinearProgress
-          sx={{ml:'1vh'}}
+          sx={{ml:'0'}}
           variant="determinate"
           value={this.state.fileUploadProgress[index]}
         />
@@ -266,10 +306,29 @@ class UploadContent extends React.Component{
       {
         linProg = (<></>);
       }
+      let avatar = (
+        <Avatar
+          src={URL.createObjectURL(this.state.selectedFiles[index])}
+          sx={{width:"3.5vh",height:"3.5vh",float:"right"}}
+        />
+      );
+      if(this.state.selectedFiles[index].type.includes("video"))
+      {
+        avatar = (
+          <Avatar
+            sx={{width:"3.5vh",height:"3.5vh",float:"right"}}
+          >
+            <FontAwesomeIcon
+              icon={faFilm}
+              size="sm"
+            />
+          </Avatar>
+        );
+      }
       return (
         <Grid
           container
-          sx={{m:"2vh",mt:"0.2vh",mb:"0.2vh"}}
+          sx={{m:"24px",mt:"0.2vh",mb:"0.2vh"}}
           key={index}
         >
           <Grid
@@ -277,7 +336,7 @@ class UploadContent extends React.Component{
           >
             <Typography
               variant="caption"
-              sx={{ml:'1vh', lineHeight: 1.5, display: 'block' }}
+              sx={{ml:'0', lineHeight: 1.5, display: 'block' }}
             >
               {obj.name}
             </Typography>
@@ -288,10 +347,7 @@ class UploadContent extends React.Component{
           <Grid
             size={2}
           >
-            <Avatar
-              src={URL.createObjectURL(this.state.selectedFiles[index])}
-              sx={{width:"3.5vh",height:"3.5vh",float:"right"}}
-            />
+            {avatar}
           </Grid>
         </Grid>
       );
@@ -342,12 +398,12 @@ class UploadContent extends React.Component{
         >
           <DialogTitle>
             <FontAwesomeIcon
-              icon={faGear}
+              icon={faCircleNotch}
               size="sm"
               spin
-              style={{marginRight: "0.5vh"}}
+              style={{marginRight: "1vh"}}
             />
-            {this.state.fileIndex}/{this.state.selectedFiles.length} Dateien wurden Hochgeladen
+            {this.state.fileIndex}/{this.state.selectedFiles.length} Dateien Hochgeladen
             <LinearProgress
               sx={{width:"100%"}}
               variant="determinate"
