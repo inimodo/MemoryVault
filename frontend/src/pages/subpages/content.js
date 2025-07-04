@@ -1,6 +1,9 @@
 import React from 'react';
 import ImageListItem from '@mui/material/ImageListItem';
 import Skeleton from '@mui/material/Skeleton';
+import Fab from '@mui/material/Fab';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faVideo, faCamera} from '@fortawesome/free-solid-svg-icons'
 
 class Content extends React.Component{
 
@@ -27,27 +30,11 @@ class Content extends React.Component{
         </ImageListItem>
       );
     }
-    if(this.props.file.isImage)
+    let icon = faCamera;
+    if(!this.props.file.isImage)
     {
-      return (
-        <ImageListItem
-          onClick={
-            ()=>this.props.onClick(
-            this.props.file,
-            this.props.folder,
-            this.props.subFolder,
-            this.props.index
-          )}
-        >
-        <img
-          alt=""
-          src={this.props.img}
-          style={{borderRadius:"4px"}}
-        />
-        </ImageListItem>
-      );
+        icon = faVideo;
     }
-
     return (
       <ImageListItem
         onClick={
@@ -58,18 +45,22 @@ class Content extends React.Component{
           this.props.index
         )}
       >
-        <video
-          style={{width:"100%",borderRadius:"4px"}}
-        >
-          <source
-            src={this.props.img}
-            type="video/mp4"
-          />
-          <source
-            src={this.props.img}
-            type="video/mov"
-          />
-        </video>
+      <img
+        alt=""
+        src={this.props.img}
+        style={{borderRadius:"4px",position:"relative"}}
+      />
+      <FontAwesomeIcon
+        style={{
+          position:"absolute",
+          bottom: "1vh",
+          left: "1vh" ,
+          fontSize:"1.5vh",
+          color:"white",
+        }}
+        icon={icon}
+        size="xl"
+      />
       </ImageListItem>
     );
 

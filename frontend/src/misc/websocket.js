@@ -137,15 +137,15 @@ class Backend extends WebSocket
     });
   }
 
-  static async getContent(token,file,folder,subFolder,quality)
+  static async getContentPreview(token,file,folder,subFolder)
   {
     const fileName = file.fileName;
     const body = {
+      opcode:0,
       token:token,
       file:file.fileName,
       folder:folder,
-      subfolder:subFolder,
-      quality:quality
+      subfolder:subFolder
     };
     const response = await Axios({
       method:"POST",
@@ -155,6 +155,25 @@ class Backend extends WebSocket
     });
     return response;
   }
+  static async getContentFull(token,file,folder,subFolder)
+  {
+    const fileName = file.fileName;
+    const body = {
+      opcode:1,
+      token:token,
+      file:file.fileName,
+      folder:folder,
+      subfolder:subFolder
+    };
+    const response = await Axios({
+      method:"POST",
+      url:Settings.backendPath + "imgloader.php",
+      responseType: "blob",
+      data:body
+    });
+    return response;
+  }
+
   static async _getContent(token,file,folder,subFolder,quality)
   {
 

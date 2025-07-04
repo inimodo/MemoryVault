@@ -137,7 +137,7 @@ class ContentLister extends React.Component{
       file = this.state.files[folder][subFolder].files[this.state.files[folder][subFolder].index];
     }
 
-    Backend.getContent(this.props.token,file,folder,subFolder,Settings.prevImgQual).then( (blob) =>{
+    Backend.getContentPreview(this.props.token,file,folder,subFolder).then( (blob) =>{
         var files = {...this.state.files};
 
         if(subFolder === "NONE")
@@ -211,7 +211,7 @@ class ContentLister extends React.Component{
       showFilePath:"",
       showFileIndex:index
     },()=>{
-      Backend.getContent(this.props.token,file,folder,subFolder,Settings.viewImgQual).then( (blob) =>{
+      Backend.getContentFull(this.props.token,file,folder,subFolder).then( (blob) =>{
           this.setState({
             showFilePath : URL.createObjectURL(blob.data)
           });
