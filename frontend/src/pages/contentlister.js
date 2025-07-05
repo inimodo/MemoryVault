@@ -2,12 +2,12 @@ import React from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Settings from "../misc/settings.js"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faPhotoFilm,
   faFolder,
-  faChevronDown
+  faChevronDown,
+  faDownload
 } from '@fortawesome/free-solid-svg-icons'
 import Backend from './../misc/websocket.js';
 import Content from './subpages/content.js';
@@ -37,6 +37,7 @@ class ContentLister extends React.Component{
     this.closeView = this.closeView.bind(this);
     this.recLoadContent = this.recLoadContent.bind(this);
     this.openNext = this.openNext.bind(this);
+    this.dlFolder = this.dlFolder.bind(this);
   }
 
   componentDidUpdate(prevProps)
@@ -220,6 +221,17 @@ class ContentLister extends React.Component{
     });
   }
 
+  dlFolder(folder,subFolder)
+  {
+    Backend.dlFolder(this.props.token,folder,subFolder,this.props.querry).then( (data) => {
+      if(data.status === true)
+      {
+        var win = window.open(data.link, '_blank');
+        win.focus();
+      }
+    });
+  }
+
   render()
   {
     const window = Dimensions.get("window");
@@ -236,8 +248,8 @@ class ContentLister extends React.Component{
     const files = this.state.folders.map( (folder,index) => (
       <Accordion
         disableGutters
-        expanded={this.state.files[folder.folderName].expanded}
         key={folder.folderName}
+        expanded={this.state.files[folder.folderName].expanded}
         onChange={(e,expand) => {
           this.loadFolder(expand,folder.folderName,"NONE")
         }}
@@ -279,6 +291,17 @@ class ContentLister extends React.Component{
               size="sm"
               style={{marginLeft:"0.5vh"}}
             />
+
+            <FontAwesomeIcon
+              icon={faDownload}
+              size="sm"
+              style={{marginLeft:"1vh",marginRight:"1vh",color:"White"}}
+              onClick={(event)=>{
+                this.dlFolder(folder.folderName,"NONE");
+                event.stopPropagation();
+              }}
+            />
+
           </Typography>
 
         </AccordionSummary>
@@ -321,6 +344,15 @@ class ContentLister extends React.Component{
                   icon={faPhotoFilm}
                   size="sm"
                   style={{marginLeft:"0.5vh"}}
+                />
+                <FontAwesomeIcon
+                  icon={faDownload}
+                  size="sm"
+                  style={{marginLeft:"1vh",marginRight:"1vh",color:"White"}}
+                  onClick={(event)=>{
+                    this.dlFolder(folder.folderName,subFolder.subFolderName);
+                    event.stopPropagation();
+                  }}
                 />
               </Typography>
               </AccordionSummary>

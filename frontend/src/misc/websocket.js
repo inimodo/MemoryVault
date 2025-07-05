@@ -95,6 +95,17 @@ class Backend extends WebSocket
     });
   }
 
+  static async dlFolder(token,folder,subFolder,querry)
+  {
+    return this.post("downloadmanager.php",
+    {
+      token:token,
+      folder:folder,
+      subfolder:subFolder,
+      querry:querry
+    });
+  }
+
   static async getImgData(token,file,folder,subFolder)
   {
     return this.post("imgdatamanager.php",
@@ -139,7 +150,6 @@ class Backend extends WebSocket
 
   static async getContentPreview(token,file,folder,subFolder)
   {
-    const fileName = file.fileName;
     const body = {
       opcode:0,
       token:token,
@@ -155,9 +165,9 @@ class Backend extends WebSocket
     });
     return response;
   }
+
   static async getContentFull(token,file,folder,subFolder)
   {
-    const fileName = file.fileName;
     const body = {
       opcode:1,
       token:token,
@@ -176,8 +186,6 @@ class Backend extends WebSocket
 
   static async _getContent(token,file,folder,subFolder,quality)
   {
-
-    const fileName = file.fileName;
     var headers = {'Content-Type': 'video/mp4'};
     if(file.isImage)
     {

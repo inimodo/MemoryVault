@@ -7,6 +7,7 @@ header("Access-Control-Allow-Headers: Content-Type, Depth, User-Agent, X-File-Si
 define("ACCESS_TOKEN","! TOKEN HERE !");
 define("DATA_PATH",$_SERVER['DOCUMENT_ROOT']."/derh/data/");
 define("FTP_PATH",$_SERVER['DOCUMENT_ROOT']."/derh/ftp/");
+define("DL_PATH",$_SERVER['DOCUMENT_ROOT']."/derh/dl/");
 define("VENDOR_PATH",$_SERVER['DOCUMENT_ROOT']."/derh/vendor/");
 
 define("VALID_FTYPE_IMG",array('jpg','jpeg','png'));
