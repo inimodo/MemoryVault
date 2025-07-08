@@ -7,9 +7,11 @@ import {
   faPhotoFilm,
   faFolder,
   faChevronDown,
-  faDownload
+  faDownload,
+  faCrown
 } from '@fortawesome/free-solid-svg-icons'
 import Backend from './../misc/websocket.js';
+import Movie from './subpages/movie.js';
 import Content from './subpages/content.js';
 import ContentViewer from './subpages/contentviewer.js';
 import Typography from '@mui/material/Typography';
@@ -420,6 +422,45 @@ class ContentLister extends React.Component{
           openNext={this.openNext}
           closeView={this.closeView}
           />
+          <Accordion
+            disableGutters
+            onChange={(e,expand) => {
+            }}
+            sx={{ boxShadow: "none" , '&:before': {display: 'none'}}}
+          >
+            <AccordionSummary
+              expandIcon={<FontAwesomeIcon style={{fontSize:"0.875em"}} icon={faChevronDown} />}
+              sx={{backgroundColor:"#121212",paddingLeft:"2vh"}}
+            >
+              <Typography
+                variant="h6"
+                sx={{ display: 'block', width:"100%",color:"rgb(255 236 89)"}}
+              >
+                <FontAwesomeIcon
+                  icon={faCrown}
+                  size="sm"
+                  style={{paddingRight:"1vh"}}
+                />
+                Ehrenloge
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails
+              sx={{backgroundColor:"#121212"}}
+            >
+              <Movie
+                token={this.props.token}
+                movie={"Maturareise_Kroatien_Rovinj_2022"}
+              />
+              <Movie
+                token={this.props.token}
+                movie={"Urlaub_Oesterreich_Mallnitz_2023_Teil_1"}
+              />
+              <Movie
+                token={this.props.token}
+                movie={"Urlaub_Oesterreich_Mallnitz_2023_Teil_2"}
+              />
+            </AccordionDetails>
+          </Accordion>
         {files}
         <div style={{width:"100%",height:"10vh"}}>
         </div>

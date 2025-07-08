@@ -37,9 +37,17 @@ switch ($opcode)
     $folders = scandir(DATA_PATH);
     $jsonFolderList = "";
     $foldersAdded = 0;
-    for ($folderIndex = 2; $folderIndex < count($folders); $folderIndex++)
+    for ($folderIndex = 0; $folderIndex < count($folders); $folderIndex++)
     {
       $jsonSubFolderList = "";
+      if(str_contains($folders[$folderIndex],"."))// Ignore \.. \. folder
+      {
+        continue;
+      }
+      if(str_contains($folders[$folderIndex],"!mov"))// Ignore #mov folder
+      {
+        continue;
+      }
       if(is_dir(DATA_PATH.$folders[$folderIndex]))
       {
         $subFolders = scandir(DATA_PATH.$folders[$folderIndex]);

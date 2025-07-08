@@ -9,7 +9,7 @@ define("DATA_PATH",$_SERVER['DOCUMENT_ROOT']."/derh/data/");
 define("FTP_PATH",$_SERVER['DOCUMENT_ROOT']."/derh/ftp/");
 define("DL_PATH",$_SERVER['DOCUMENT_ROOT']."/derh/dl/");
 define("VENDOR_PATH",$_SERVER['DOCUMENT_ROOT']."/derh/vendor/");
-
+define("MOV_PATH",DATA_PATH."!mov/");
 define("VALID_FTYPE_IMG",array('jpg','jpeg','png'));
 define("VALID_FTYPE_VID",array('mp4','mov','wmv'));
 

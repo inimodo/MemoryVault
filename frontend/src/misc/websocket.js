@@ -166,6 +166,65 @@ class Backend extends WebSocket
     return response;
   }
 
+  static async getMovieSize(token,movie)
+  {
+    return this.post("moviemanager.php",
+    {
+      opcode:2,
+      token:token,
+      file:movie
+    });
+  }
+
+  static async getMovie(token,movie,progressEvent)
+  {
+    const body = {
+      opcode:1,
+      token:token,
+      file:movie
+    };
+    const response = await Axios({
+      method:"POST",
+      url:Settings.backendPath + "moviemanager.php",
+      responseType: "blob",
+      onDownloadProgress: progressEvent,
+      data:body
+    });
+    return response;
+  }
+
+  static async getMoviePreview(token,movie)
+  {
+    const body = {
+      opcode:0,
+      token:token,
+      file:movie
+    };
+    const response = await Axios({
+      method:"POST",
+      url:Settings.backendPath + "moviemanager.php",
+      responseType: "blob",
+      data:body
+    });
+    return response;
+  }
+
+  static async getMoviePreview(token,movie)
+  {
+    const body = {
+      opcode:0,
+      token:token,
+      file:movie
+    };
+    const response = await Axios({
+      method:"POST",
+      url:Settings.backendPath + "moviemanager.php",
+      responseType: "blob",
+      data:body
+    });
+    return response;
+  }
+
   static async getContentFull(token,file,folder,subFolder)
   {
     const body = {

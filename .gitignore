@@ -2,3 +2,4 @@
 /build/*
 /frontend/src/userimages/*.png
 backend/php/settings.php
+/backend/data/\#mov/*
