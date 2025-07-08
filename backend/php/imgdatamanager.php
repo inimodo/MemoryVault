@@ -25,22 +25,24 @@ if($subFolder == "NONE")
 {
   $filePath = DATA_PATH.$folder."/";
 }
-$filePath .= $file.".json";
+$filePath .= $file;
+$jsonFilePath = $filePath.".json";
 
 switch ($op) {
   case 0: // List img data
-    $imgData = json_decode(file_get_contents($filePath));
+    $imgData = json_decode(file_get_contents($jsonFilePath));
     $imgData->status = true;
+    $imgData->size = filesize($filePath);
     echo json_encode($imgData);
     break;
   case 1: // Add user
-    $imgData = json_decode(file_get_contents($filePath));
+    $imgData = json_decode(file_get_contents($jsonFilePath));
     if(in_array($user,$imgData->inimg))
     {
       die('{"status":false}');
     }
     array_push($imgData->inimg,$user);
-    file_put_contents($filePath,json_encode($imgData));
+    file_put_contents($jsonFilePath,json_encode($imgData));
     $imgData->status = true;
     echo json_encode($imgData);
     break;

@@ -102,22 +102,15 @@ class Movie extends React.Component{
             src={this.state.moviePreviewPath}
             style={{width:"100%",position:"relative",borderRadius:"5px"}}
           />
-          <FontAwesomeIcon
-            style={{
-              position:"absolute",
-              width:"50%",
-              top: "18vh",
-              left: "25%" ,
-              fontSize:"9vh",
-              color:"white",
-            }}
-            spin
-            icon={faCircleNotch}
-            size="xl"
-          />
           <LinearProgress
             variant="determinate"
             value={this.state.dlProgress}
+            sx={{
+              backgroundColor:"gray",
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: 'white'
+              }
+            }}
           />
         </React.Fragment>
       );

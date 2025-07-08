@@ -297,7 +297,13 @@ class UploadContent extends React.Component{
     return Array.from(this.state.selectedFiles).map( (obj , index) =>{
       var linProg = (
         <LinearProgress
-          sx={{ml:'0'}}
+          sx={{
+            ml:'0',
+            backgroundColor:"gray",
+            '& .MuiLinearProgress-bar': {
+              backgroundColor: 'white'
+            }
+          }}
           variant="determinate"
           value={this.state.fileUploadProgress[index]}
         />
@@ -405,7 +411,13 @@ class UploadContent extends React.Component{
             />
             {this.state.fileIndex}/{this.state.selectedFiles.length} Dateien Hochgeladen
             <LinearProgress
-              sx={{width:"100%"}}
+              sx={{
+                width:"100%",
+                backgroundColor:"gray",
+                '& .MuiLinearProgress-bar': {
+                  backgroundColor: 'white'
+                }
+              }}
               variant="determinate"
               value={this.state.fileIndex/this.state.selectedFiles.length*100}
             />

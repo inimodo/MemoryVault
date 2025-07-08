@@ -39,25 +39,7 @@ function createVideoThumbnail($filePath)
 
 switch ($op) {
   case 1: // 100% Quality
-    if(fileIsImg($file,VALID_FTYPE_IMG))
-    {
-      $image = NULL;
-      switch (getFileEnd($file))
-      {
-        case 'png':
-        $image = imagecreatefrompng($filePath);
-          break;
-        case 'jpeg':
-        case 'jpg':
-        $image = imagecreatefromjpeg($filePath);
-          break;
-      }
-
-      imagejpeg($image, NULL, 100) ;
-    }else
-    {
-      echo file_get_contents($filePath);
-    }
+    echo file_get_contents($filePath);
     break;
 
   case 0: // 10% Preview:

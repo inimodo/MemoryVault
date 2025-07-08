@@ -123,7 +123,7 @@ class MemoryVault extends React.Component{
           querry={this.state.querry}
         />
         <Fab
-          sx={{position:'fixed', bottom: 15, right: 15, width: 50, height: 50, boxShadow:"0px 0px 10px 5px #121212"}}
+          sx={{position:'fixed', bottom: 15, right: 15, width: 50, height: 50}}
           onClick={()=>{
             this.setState({
               showUploadMenu:true
@@ -136,7 +136,7 @@ class MemoryVault extends React.Component{
           />
         </Fab>
         <Fab
-          sx={{position:'fixed', bottom: 15, right: 80 , width: 50, height: 50 , boxShadow:"0px 0px 10px 5px #121212"}}
+          sx={{position:'fixed', bottom: 15, right: 80 , width: 50, height: 50 }}
           onClick={()=>{
             this.setState({
               showSettingsMenu:true
@@ -149,7 +149,7 @@ class MemoryVault extends React.Component{
           />
         </Fab>
         <Fab
-          sx={{position:'fixed', bottom: 15, left: 15 ,width: 50, height: 50 , boxShadow:"0px 0px 10px 5px #121212"}}
+          sx={{position:'fixed', bottom: 15, left: 15 ,width: 50, height: 50 }}
           onClick={()=>{this.setState({user:-1})}}>
           <Avatar sx={{ width: 50, height: 50 }} src={UserList.Icons[this.state.user]}/>
         </Fab>
@@ -165,8 +165,7 @@ class MemoryVault extends React.Component{
             freeSolo
             sx ={{
               backgroundColor: "#121212",
-              borderRadius: "50px",
-              boxShadow:"0px 0px 10px 5px #121212"
+              borderRadius: "50px"
             }}
             options={UserList.QuerryText.map((querry) => querry)}
             renderInput={(params) =>

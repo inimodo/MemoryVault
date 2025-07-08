@@ -8,7 +8,14 @@ import {
   faFolder,
   faChevronDown,
   faDownload,
-  faCrown
+  faCrown,
+  faCakeCandles,
+  faUmbrellaBeach,
+  faBeerMugEmpty,
+  faPersonWalking,
+  faSchool,
+  faHouse,
+  faCalendarDay
 } from '@fortawesome/free-solid-svg-icons'
 import Backend from './../misc/websocket.js';
 import Movie from './subpages/movie.js';
@@ -31,7 +38,9 @@ class ContentLister extends React.Component{
       showSubFolder:"",
       showFile:{},
       showFilePath:"",
-      showFileIndex:0
+      showFileIndex:0,
+      showFileProg:0,
+      showFileData:{}
     };
     this.loadFolderList = this.loadFolderList.bind(this);
     this.loadFolder = this.loadFolder.bind(this);
@@ -40,6 +49,7 @@ class ContentLister extends React.Component{
     this.recLoadContent = this.recLoadContent.bind(this);
     this.openNext = this.openNext.bind(this);
     this.dlFolder = this.dlFolder.bind(this);
+    this.decodeIcon = this.decodeIcon.bind(this);
   }
 
   componentDidUpdate(prevProps)
@@ -169,7 +179,9 @@ class ContentLister extends React.Component{
       showSubFolder:"",
       showFile:{},
       showFilePath:"",
-      showFileIndex:-1
+      showFileIndex:-1,
+      showFileData:{},
+      showFileProg:0
     });
   }
 
@@ -212,14 +224,37 @@ class ContentLister extends React.Component{
       showSubFolder:subFolder,
       showFile:file,
       showFilePath:"",
-      showFileIndex:index
+      showFileIndex:index,
+      showFileData:{},
+      showFileProg:0
     },()=>{
-      Backend.getContentFull(this.props.token,file,folder,subFolder).then( (blob) =>{
+      Backend.getImgData(this.props.token,file,folder,subFolder).then( (data) => {
+        if(data.status === true)
+        {
           this.setState({
-            showFilePath : URL.createObjectURL(blob.data)
+            showFileData:data
+          },()=>{
+            Backend.getContentFull(
+              this.props.token,
+              file,
+              folder,
+              subFolder,
+              (progressEvent)=>{
+                const { loaded, total } = progressEvent;
+                var fprog = Math.floor((loaded * 100) / this.state.showFileData.size);
+                this.setState({
+                  showFileProg: fprog
+                });
+              }
+            ).then( (blob) =>{
+                this.setState({
+                  showFilePath : URL.createObjectURL(blob.data)
+                });
+              }).catch((error)=>{});
           });
-        }).catch((error)=>{
-        });
+        }
+
+      });
     });
   }
 
@@ -233,7 +268,38 @@ class ContentLister extends React.Component{
       }
     });
   }
-
+  decodeIcon(folder)
+  {
+    if(folder.includes("Events"))
+    {
+      return faCalendarDay;
+    }
+    if(folder.includes("gehen"))
+    {
+      return faPersonWalking;
+    }
+    if(folder.includes("HTL"))
+    {
+      return faSchool;
+    }
+    if(folder.includes("Haus"))
+    {
+      return faHouse;
+    }
+    if(folder.includes("feiern"))
+    {
+      return faCakeCandles;
+    }
+    if(folder.includes("Urlaube"))
+    {
+      return faUmbrellaBeach;
+    }
+    if(folder.includes("See"))
+    {
+      return faBeerMugEmpty;
+    }
+    return faFolder;
+  }
   render()
   {
     const window = Dimensions.get("window");
@@ -271,7 +337,7 @@ class ContentLister extends React.Component{
             sx={{ display: 'block', width:"50%"}}
           >
             <FontAwesomeIcon
-              icon={faFolder}
+              icon={this.decodeIcon(folder.folderName)}
               size="sm"
               style={{paddingRight:"1vh"}}
             />
@@ -419,6 +485,8 @@ class ContentLister extends React.Component{
           showFolder={this.state.showFolder}
           showSubFolder={this.state.showSubFolder}
           showFileIndex={this.state.showFileIndex}
+          showFileProg={this.state.showFileProg}
+          showFileData={this.state.showFileData}
           openNext={this.openNext}
           closeView={this.closeView}
           />

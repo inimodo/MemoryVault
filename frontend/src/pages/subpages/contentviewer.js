@@ -4,6 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faUserPlus,
   faCircleInfo,
+  faSquareCaretRight,
+  faSquareCaretLeft,
+  faCalendar,
+  faUser
 } from '@fortawesome/free-solid-svg-icons'
 import Backend from '../../misc/websocket.js';
 import Typography from '@mui/material/Typography';
@@ -21,26 +25,9 @@ class ContentViewer extends React.Component{
   {
     super(props);
     this.state={
-      imgData:{}
     };
     this.getDateString = this.getDateString.bind(this);
     this.addMe = this.addMe.bind(this);
-  }
-
-  componentDidUpdate(prevProps)
-  {
-    if (this.props.showFile !== prevProps.showFile
-    &&  this.props.showFile.fileName !== undefined )
-    {
-      Backend.getImgData(this.props.token,this.props.showFile,this.props.showFolder,this.props.showSubFolder).then( (data) => {
-        if(data.status === true)
-        {
-          this.setState({
-            imgData:data
-          });
-        }
-      });
-    }
   }
 
   addMe()
@@ -77,12 +64,9 @@ class ContentViewer extends React.Component{
     var viewerContent=(
       <img
         alt=""
-        onClick={
-        ()=>{this.props.openNext(
-          this.props.showFolder,
-          this.props.showSubFolder,
-          this.props.showFileIndex+1
-        )}}
+        onClick={(event)=>{
+          event.stopPropagation();
+        }}
         style={{
           maxWidth:"100%",
           maxHeight:"65vh",
@@ -120,8 +104,17 @@ class ContentViewer extends React.Component{
     {
       viewerContent = (
         <CircularProgress
-          sx={{marginLeft:"calc( 50% - 20px)",marginTop:"20vh",marginBottom:"20vh"}}
-          color="inherit"
+          size="10vh"
+          color="primary"
+          sx={{
+            marginLeft:"calc( 50% - 20px)",
+            marginTop:"20vh",
+            marginBottom:"20vh",
+            '& .MuiCircularProgress-circle': {
+              color: 'white'
+            }}}
+          variant="determinate"
+          value={this.props.showFileProg}
         />
       );
     }
@@ -130,30 +123,66 @@ class ContentViewer extends React.Component{
       <Box
         sx={{marginTop:"0.5vh"}}
       >
-        <Typography
-          variant="caption"
-          sx={{
-            float: "left",
-            ml:'0vh',
-            display: 'block',
-            color:"Gray"
-          }}
-        >
+
           <FontAwesomeIcon
-            icon={faCircleInfo}
-            size="sm"
-            style={{marginRight:"0.5vh"}}
+            icon={faSquareCaretLeft}
+            size="2x"
+            style={{width:"10%",float: "left"}}
+            onClick={
+              (event)=>{
+                this.props.openNext(
+                  this.props.showFolder,
+                  this.props.showSubFolder,
+                  this.props.showFileIndex-1
+                );
+                event.stopPropagation();
+              }}
           />
-           Von {UserList.Names[this.state.imgData.user]} aufgenommen am {this.getDateString(this.state.imgData.cdate)}
-        </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              float: "left",
+              textAlign:"center",
+              width:'80%',
+              display: 'block',
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faUser}
+              size="sm"
+              style={{marginRight:"0.5vh"}}
+            />
+            {UserList.Names[this.props.showFileData.user]}<br/>
+            <FontAwesomeIcon
+              icon={faCalendar}
+              size="sm"
+              style={{marginRight:"0.5vh"}}
+            />
+            {this.getDateString(this.props.showFileData.cdate)}
+          </Typography>
+          <FontAwesomeIcon
+            icon={faSquareCaretRight}
+            size="2x"
+            style={{width:"10%",float: "left"}}
+            onClick={
+              (event)=>{
+                this.props.openNext(
+                  this.props.showFolder,
+                  this.props.showSubFolder,
+                  this.props.showFileIndex+1
+                );
+                event.stopPropagation();
+              }}
+          />
+
       </Box>
     );
 
     var userAddButton = (<></>);
     var userAvatars = (<></>);
-    if(this.state.imgData.inimg !== undefined)
+    if(this.props.showFileData.inimg !== undefined)
     {
-      userAvatars = this.state.imgData.inimg.map((user,index)=>
+      userAvatars = this.props.showFileData.inimg.map((user,index)=>
       (
         <Avatar
           key={index}
@@ -163,7 +192,7 @@ class ContentViewer extends React.Component{
         />
       ));
 
-      if(!this.state.imgData.inimg.includes(this.props.user))
+      if(!this.props.showFileData.inimg.includes(this.props.user))
       {
         userAddButton = (
           <Button
@@ -180,7 +209,10 @@ class ContentViewer extends React.Component{
                 size="lg"
               />
             }
-            onClick={this.addMe}
+            onClick={(event)=>{
+              this.addMe();
+              event.stopPropagation();
+            }}
           >
           </Button>
         );
@@ -195,71 +227,36 @@ class ContentViewer extends React.Component{
         {userAddButton}
       </Box>
     );
-
     if(this.props.showFilePath==="")
     {
-      viewerImgData = (<></>);
-      viewerInImg = (<></>);
+      viewerImgData=(<></>);
+      viewerInImg=(<></>);
     }
-
     return(
       <Backdrop
         sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
         open={this.props.showViewer}
+        onClick={()=>{
+          this.props.closeView();
+        }}
         >
-          <Grid
-            container
-            spacing={0}
-            sx={{width:"100%"}}
-          >
-            <Grid
-              size={1}
-              onClick={
-                ()=>{this.props.openNext(
-                  this.props.showFolder,
-                  this.props.showSubFolder,
-                  this.props.showFileIndex-1
-                )}}
-            >
-            </Grid>
-            <Grid
-              size={10}
-              sx={{
-                border: "solid",
-                borderColor: "#121212",
-                backgroundColor: "#121212",
-                borderWidth: "2vh",
-                borderRadius:"4px"
-              }}
-              >
-              <Stack>
-                {viewerContent}
-                {viewerImgData}
-                {viewerInImg}
-              </Stack>
 
-            </Grid>
-            <Grid
-              size={1}
-              onClick={
-                ()=>{this.props.openNext(
-                  this.props.showFolder,
-                  this.props.showSubFolder,
-                  this.props.showFileIndex+1
-                )}}
-              >
-            </Grid>
-            <Grid size={12}>
-              <Box
-                sx={{width:"100%",height:"20vh"}}
-                onClick={this.props.closeView}
-              >
-              </Box>
-            </Grid>
-          </Grid>
+          <Stack sx={{width:"90%"}}>
+            {viewerContent}
+            {viewerImgData}
+            {viewerInImg}
+          </Stack>
+
       </Backdrop>
     );
   }
 }
 
 export default ContentViewer;
+
+/*
+
+
+
+  this.props.closeView
+*/

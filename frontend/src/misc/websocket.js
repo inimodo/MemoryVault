@@ -225,7 +225,7 @@ class Backend extends WebSocket
     return response;
   }
 
-  static async getContentFull(token,file,folder,subFolder)
+  static async getContentFull(token,file,folder,subFolder,progressEvent)
   {
     const body = {
       opcode:1,
@@ -238,6 +238,7 @@ class Backend extends WebSocket
       method:"POST",
       url:Settings.backendPath + "imgloader.php",
       responseType: "blob",
+      onDownloadProgress: progressEvent,
       data:body
     });
     return response;
